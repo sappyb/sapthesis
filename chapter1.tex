@@ -1,0 +1,58 @@
+\chapter{Introduction} 
+In recent years, the demand for High-Performance
+Computing (HPC) applications has surged, driven by the increasing complexity of
+scientific computations and data-intensive tasks. Despite the remarkable
+progress in HPC infrastructure, challenges persist in optimizing communication
+performance, particularly in modern HPC environment like cloud data centers. 
+This prospectus aims to address these challenges by
+incorporating Software-Defined Networking (SDN)~\cite{kreutz2014software} enhancements for optimizing routing for these 
+state of the art HPC environments, thereby improving the efficiency and reliability of communication
+for HPC applications.  
+
+Cloud data centers, such as those offered by GCP and
+Azure, heavily rely on fat-tree topologies ~\cite{leiserson1985fat} for their network architecture ~\cite{de2022}.
+However, the bottleneck in these systems often lies in communication efficiency,
+hindering the seamless execution of HPC applications. 
+Between 2010 and 2018, there was a remarkable 65-fold surge in 
+the computational throughput of the Top 500 HPC systems ~\cite{t500}, whereas the increase 
+in offnode communication bandwidth was comparatively modest, standing at only 4.8 times ~\cite{bergman2018empowering} ~\cite{michelogiannakis2019bandwidth}.
+By enhancing the routing
+techniques within fat-tree topologies through SDN, this research seeks to
+alleviate these bottlenecks and facilitate the deployment of HPC workloads on
+cloud platforms. Such improvements hold significant implications for scientific
+computing, enabling researchers to harness the full potential of HPC resources
+for groundbreaking discoveries across various fields.  
+
+The research methodology
+entails a comprehensive approach to maximize the performance of fat-tree
+topologies with SDN enhancements. 
+
+
+Initially, a thorough validation of the
+simulation model against real-world HPC systems, such as Quartz ~\cite{quartz}, will be
+conducted to understand the effects of network parameters (e.g., link bandwidth,
+NIC scheduling) on communication performance. 
+
+
+Subsequently, three distinct SDN routing strategies will be implemented and evaluated: greedy single-path
+routing, multipath routing, and heuristic-based optimal routing. These
+strategies will be tested within a full bisection fat-tree topology to assess
+their efficacy in improving communication performance for HPC applications.  
+
+The primary contribution of this research lies in its exploration of how network
+parameters impact communication in next-generation HPC systems. By integrating
+SDN enhancements into fat-tree topologies, novel insights will be gained into
+optimizing communication efficiency for data-centric applications. Furthermore,
+this work will extend existing knowledge by demonstrating the potential of
+SDN-driven routing techniques to significantly enhance the performance of HPC
+workloads in cloud environments.  
+
+The structure of this prospectus aligns with
+the outlined research objectives. Chapter 2 will provide a comprehensive
+overview of interconnection technologies and SDN fundamentals. In Chapter 3, the
+focus will shift to examining the influence of network parameters on modern HPC
+systems. Chapter 4 will delve into the implementation of SDN enhancements within
+HPC environments and evaluate their impact on application performance. Finally,
+Chapter 5 will offer concluding remarks and insights derived from the research
+findings.
+

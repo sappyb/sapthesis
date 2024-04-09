@@ -1,0 +1,54 @@
+
+The network interface controller (NIC) in contemporary HPC systems is
+responsible for scheduling and packetizing messages.
+
+\vspace{0.08in}
+\noindent{\bf FCFS scheduling:} 
+Messages are inserted
+at the back of the scheduling queue, as and when they arrive.
+During the packetization process, %the scheduler pops the elements from the head of
+%the scheduling queue, creates the packet from that message, and pushes it back
+%to the top.
+the scheduler keeps creating packets from the top of the queue until
+the entire message is packetized before it packetizes the next message in the queue. 
+%This is what typically happens when there is
+%only one virtual channel in a NIC/network.
+
+\vspace{0.08in}
+\noindent{\bf RR scheduling:} Messages are inserted into the scheduling queue of
+the network interface, as and when they arrive. During the packetization process,
+the scheduler creates one packet for a message and then moves to the next message:
+all messages are considered in a round-robin manner. 
+%However during the packetization process, the scheduler pops the top message from
+%scheduling queue, creates a packet from it and then inserts to the tail. The scheduler
+%then moves to the next message in the queue, which is currently at the top of the
+%scheduling queue. The scheduler repeats the process until all the messages in the
+%scheduling queue are packetized before it again creates a packet from the first message
+%which entered the queue initially.
+RR not only allows concurrent communication
+progress for several communicating-pairs, but may also help the network in
+better utilizing multiple communication paths. While desirable, such a scheme is
+difficult to implement in the hardware as the number of concurrent messages can
+be very large.
+
+%default first come first serve (FCFS) message
+%scheduling. 
+\vspace{0.08in}
+%In RR-N, the messages are entering the scheduling queue in the network interface
+%in a first come first serve manner with the first N message in the queue, waiting
+%for their turn of packetization. Each of those N messages is first packetized one
+%after the other. When one of the N messages is completely packetized, the immediate
+%next message in the queue takes its place. 
+
+\vspace{0.08in}
+\noindent{\bf RR-N scheduling:} In this scheme, $N$ is a parameter. RR-N is similar to RR,
+except that instead of packetizing every message in the scheduling queue in
+a round-robin manner,
+the scheduler packetizes the top $N$ messages in the scheduling queue. For example,
+in RR-2, the scheduler only packetizes the first 2 messages for communication.
+This newly added scheme simulates the real world scenario where a limited
+number of hardware queues are available at a NIC, which are used to keep
+multiple message in-flight concurrently.
+%and thus
+%packetization of only these many messages can happen concurrently.  
+

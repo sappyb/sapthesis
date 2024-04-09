@@ -1,0 +1,214 @@
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figure/val/mpi-scaled.eps}
+  \includegraphics[width=\columnwidth]{figure/val/mpi.eps}
+  \caption{Computation and communication characteristics of all applications without scaling (left) and with scaling for GPUs (right)
+running on 32 processes.} 
+  \label{fig:trace_profile}
+\end{figure*}
+
+In this section, we describe the applications and workloads used in this paper,
+and then discuss the hardware parameters varied in the simulations.
+
+% The experiment has two components. First, we validate the TraceR-CODES
+% framework by comparing simulation results with measurement results on a real
+% supercomputer. Second, we study the impact of the hardware parameters on the
+% performance. In the following, we will give details about our experiment
+% design and configuration.
+
+\subsection{Applications and Workloads}
+\label{sec:applicationworkload}
+
+We selected six applications of different computation and communication
+characteristics to create realistic HPC workloads. The applications include two
+communication-heavy kernels, Stencil4d\cite{bhatele2018evaluating} and Subcomm3d\cite{bhatele2018evaluating}, two compute-intensive
+applications, Kripke\cite{kripke} and Laghos\cite{laghos}, and two applications with a balanced
+communication-to-computation ratio, AMG\cite{amg} and SW4lite\cite{sjogreen2018sw4} (see
+Figure~\ref{fig:trace_profile}, left).  The traces used in the study were
+collected using Score-P \cite{knupfer2012score} on Vulcan, a Blue Gene/Q
+installation and Quartz, an Intel Xeon cluster at Lawrence Livermore National
+Laboratory (LLNL). The traces contain information about all MPI events executed on each MPI process, along with their
+timestamps. In addtion, they also record user annotations such as loop
+begin and end for the main compute loop. Following
+is a brief description of the six applications:
+
+\begin{itemize}
+\item \textbf{Stencil4d}: MPI benchmark with 8-point near-neighbor communication in a 4D virtual process grid.
+\item \textbf{Subcomm3d}: MPI benchmark with all-to-all communication within subsets of processes in a 3D virtual process grid.
+\item \textbf{Kripke}: 3D $S^n$ deterministic particle transport code, which runs an
+  MPI-based parallel sweep algorithm.
+\item \textbf{Laghos}: Proxy application that solves time-dependent Euler equations with MPI-based
+  domain decomposition.
+\item \textbf{AMG}:  Parallel algebraic multigrid solver.
+\item \textbf{SW4lite}: Proxy application for SW4~\cite{sjogreen2018sw4}, a 3D seismic modeling code.
+% The computational domain is discretized on one Cartesian mesh and optionally
+% on one curvilinear mesh that follows a simple topography.
+\end{itemize}
+
+Figure~\ref{fig:trace_profile} (left) presents the fraction of total execution
+time these applications spend in communication and computation when running
+with 32 processes.  Computation is denoted by the red color, and non-overlapped
+communication is shown in green. At 32 processes, Stencil4d and Subcomm3d are
+dominated by communication. We tuned the communication-computation ratios in
+Stencil4d and Subcomm3d such that they replicate the runtime profiles of
+representative communication-intensive applications.  Kripke and Laghos are
+dominated by computation with both nding more than 95\% of time in computation.
+AMG and SW4lite spend $\sim$80\% of their time in computation and the rest in
+communication.  As described in Section~\ref{sec:gpu_tracer}, suitable
+computation scaling factors are used to alter the behavior of these traces to
+emulate running the computation on GPUs. Figure~\ref{fig:trace_profile} (right)
+shows how the computation-to-communication ratios change as we apply these
+scaling factors. Stencil4d and Subcomm3d spend most of their time in
+communication after compute scaling and the other applications now spend
+between 25-65\% in communication.
+
+The workloads in our study are created using the six HPC applications mentioned
+above at different process counts -- 32, 64, 128, 256, and 512.  In our study,
+the system supports up to 2048 processes. Thus, the sum of process counts in
+each of the workloads is exactly 2048.  Each workload is obtained by
+iteratively randomly selecting an application and a job size until the total
+workload size has reached 2048.  As a result, each workload has many jobs of
+different sizes, resembling the capacity workload of supercomputing
+centers~\cite{jain2016evaluating}.  Our experiments use 20 such random
+workloads. To ensure that the reported performance of each job size of each
+application is representative, we ensure that each job size of each application
+appears at least four times in the 20 workloads. This ensures that each job
+size of each application has been executed under different conditions in the
+experiments.
+ 
+\subsection{Hardware Design Parameters}
+\label{sec:hardwareparameters}
+
+\vspace{0.08in}
+\noindent{\bf Network topology:}
+In our experiments, the impact of the hardware design parameters are studied in the context of two 
+widely used interconnect topologies: fat-tree and 1D dragonfly.
+%Both topologies are used in the current and future HPC systems. 
+
+{\em (1)~1D Dragonfly} -- 1D Dragonfly \cite{Kim2008ISCA}
+is a two-level direct network topology: switches form groups with a fully connected
+intra-group topology and groups are connected with an inter-group topology.
+The topology has three important parameters \cite{Kim2008ISCA}:
+the number of compute nodes in each switch ($p$),
+the number of links in each switch that connect to other switches in the same group
+($a$), the number of links in each switch that connect to other groups ($h$). A balanced dragonfly
+in general requires $a = 2p = 2h$. In our experiments, we set $p = h = 8$ and $a = 16$.
+Each group has 16 switches and 128 compute nodes. 
+The global link connectivity between group follows the per-router arrangement
+%with parameters
+%(8,1,1) as specified in
+\cite{Alzaid2020ICS}.
+%For one GPU per node system, the network has
+%16 groups and 2048 compute nodes. The number of groups is reduced as more GPUs are
+%equipped on each compute node: there are 8 groups
+%for 2 GPUs per node case, 4 groups for 4 GPU per node case, and so on. 
+The routing algorithm used is the progressive adaptive routing (PAR) \cite{Kim2008ISCA,Alzaid2020ICS}.
+% Figure~\ref{fig:dfly_group} show the link connectivity from router R0 in our 1D Dragonfly topology.
+
+{\em (2)~Fat-tree} -- The other topology is a 3-level full bisection bandwidth
+fat-tree.  In a 3-level full bisection bandwidth fat-tree, there are three types
+of switches: 1)~core switches which are at the top layer to connect pods,
+2)~aggregate switches, which connects the leaf switches and form a pod, and
+3)~the leaf switches, which are connected to the compute nodes. In a 3-level
+full bisection bandwidth fat-tree, the number of uplinks in the aggregate and
+leaf switches is the same as the number of downlinks. For our study, the 3-level
+fat-tree is built using 32 radix switches. Each leaf switch connects to 16
+compute nodes and 16 aggregate switches. Each pod has 16 aggregate switches, 16
+edge switches, and 256 compute nodes.
+%There are 8 pods in the topology to
+%support 2048 compute nodes for 1 GPU per node case, 4 pods for 2 GPU per node
+%case, and so on.  We assume adaptive routing for routing of the packets. 
+
+%Figure~\ref{fig:ftree_pod} shows  a fat-tree pod we are use in our
+%experiments. We shows the links for L0 and L15 (first and the last leaf
+%switch in the pod) and A0 and A15 (first and the last aggregate switch in the
+%  pod) to avoid visual clutter. 
+
+\vspace{0.08in}
+\noindent{\bf Number of GPUs per node:}
+In our study, we vary the number of GPUs in each compute node from 1 to
+8 to analyze the impact of the increased computation density and the reduction
+of network endpoints on the system performance. Each GPU is assigned
+to one MPI process; to simulate different number of GPUs
+per node, multiple MPI process are assigned to a node.
+The GPUs inside a node are connected in an all-to-all connection topology resembling the intra node connectivity of Sierra system with NVlink.
+The bandwidth between GPUs within a node
+is set to be twice the network link bandwidth, so that it replicates that of Sierra supercomputer.
+The default setting for GPUs per node is 1 GPU per node. This is the default
+GPU per node setting whose performance is used to normalize other results. 
+%to which we compare other results.
+
+In the experiments, when we increase the number of GPUs per node, we
+proportionally reduce the number of network endpoints, i.e. we make sure that
+for all network configurations, the total GPU count, as well the total MPI
+  processes, is 2048. This is done
+  to ensure that we compare systems that are of computationally equal capability
+  as is often the case in the real world. Secondly, we make sure that each
+  workload covers the entire network and no node is left empty during the
+  simulation. 
+  %Note that these configurations were not used for validation
+  %purpose, since the validation was done using the exact Quartz supercomputer
+  %topology.  
+  Table~\ref{table:configs} summarizes the network sizes used for each GPU
+  per node setting, with the default setting being that of 1 GPU per node.  
+
+\begin{table}[h]
+       \centering
+\caption{Network sizes for different GPUs per node.}
+        \vspace{-1em}
+        \begin{tabular}{ccc} \toprule
+        \textbf{GPUs per node} & \textbf{1D Dragonfly} & \textbf{Fat-tree}\\ \midrule 
+        1 & 16 Groups & 
+        8 Pods \\
+        
+        2 &
+        8 Groups & 
+        4 Pods \\
+        
+        4 & 4 Groups & 
+        2 Pods \\
+        
+        8 & 
+        2 Groups & 
+        1 Pods\\ \bottomrule
+        \end{tabular}
+\label{table:configs}
+\end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{plots/ftree/map/ftree-mapping-all.eps}
+\caption{Speedup on fat-tree for various numbers of GPUs per node settings with
+respect to 1 GPU/node configuration.}
+\label{fig:ftree_gpu}
+\end{figure*}
+
+\vspace{0.08in}
+\noindent{\bf Network link bandwidth:}
+We set our baseline link bandwidth as x=11.9 GB/s, which is the peak achieved
+link bandwidth on Mellanox EDR networks such as
+the Quartz supercomputer at LLNL. To analyze the
+sensitivity of various compute capability equivalent systems to communication capability, we vary the bandwidth
+from x/16 (16 times slow down of the baseline) to 16x (16 times speedup of the
+baseline). In the rest of the paper, we will use x to represent the base
+bandwidth, and will denote the network speed as x/16, x/8, x/4, x/2, x, 2x, 4x,
+8x, and 16x.  
+%Varying the network speed allows us to quantify the impact of
+%increasing network bandwidth for various compute capability equivalent systems.
+
+
+\vspace{0.08in}
+\noindent{\bf Message scheduling:}
+As the computation and communication density
+on the compute node increases, message scheduling performed by the
+NIC may have an impact on
+communication performance. In particular, scheduling schemes that alleviate
+head-of-line blocking may have significant benefits, especially when the link
+bandwidth is very high. In addition to head-of-line blocking, which is often mitigated
+by the use of virtual channels, message scheduling also affects congestion management and network
+utilization. Scheduling schemes that expose packets from multiple communicating-pairs
+to the network may perform better as it provides the network with the flexibility to
+use multiple network paths concurrently. To investigate the effect of message scheduling
+on a system with different network and different node compute capability, we compare the performance
+of FCFS, RR, and RR-N with different values of $N$ on systems with different configurations. 
+

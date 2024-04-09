@@ -1,0 +1,108 @@
+Although TraceR-CODES is powerful, it does not support all functions required by
+our study.
+%In particular, it does not support non-standard fat-trees (which are
+%often deployed) and some message scheduling schemes that we intend to
+%investigate. 
+We added a new graph-based network model to CODES, which
+gives us the flexibility to perform simulations on realistic fat-tree networks.
+We also added message scheduling mechanisms that are used in this study.
+Further, we modified the Tracer-CODES simulator so that it can track 
+ communication-computation overlap in applications.
+
+%To study the hardware parameters in this work,
+%\begin{itemize}
+%\item We added a new network model.
+%\item We added various NIC-scheduling mechanisms in Tracer-CODES.
+%\item We also modified
+%  the
+%Tracer-CODES simulator so that it can track the timings of
+%communication, computation overlap in applications.
+%\end{itemize}
+
+\subsection{Simulating an arbitrary network topology}
+
+TraceR-CODES provides many built-in interconnection networks, including fat-tree
+and dragonfly. However, the connectivity within these built-in networks is
+rigid, and may not exactly match networks deployed in production supercomputers.
+Therefore, we implement a new network model, which we call the {\em arbitrary
+graph model}, that allows users to explicitly define their network topology.
+%This, with the arbitrary graph model, any network topology, regular or
+%irregular, symmetrical or non-symmetrical can be simulated.
+%This is a new feature that increases the capability of Tracer-CODES.
+
+%from implementing standard, often
+%symmetrical topologies, such as fat-tree, dragonfly, etc.
+%to any arbitrary network model. This is important because in most cases,
+%the interconnect topologies that are used in real computing facilities are
+%a bit different from the built-in topologies in Tracer-CODES even when the
+%network is of the same type. Arbitrary Graph Network Model is designed to
+%take any network topology and feed it to the Tracer-CODES simulator. It
+%takes the network description XML file and creates the network topology
+%from it. Tracer-CODES simulator can then replay traces on this network model.
+
+\subsection{Simulating message scheduling in the NIC}
+
+The network interface controller (NIC) in contemporary HPC systems is
+responsible for scheduling and packetizing messages.
+
+\vspace{0.08in}
+\noindent{\bf FCFS scheduling:} 
+Messages are inserted
+at the back of the scheduling queue, as and when they arrive.
+During the packetization process, %the scheduler pops the elements from the head of
+%the scheduling queue, creates the packet from that message, and pushes it back
+%to the top.
+the scheduler keeps creating packets from the top of the queue until
+the entire message is packetized before it packetizes the next message in the queue. 
+%This is what typically happens when there is
+%only one virtual channel in a NIC/network.
+
+\vspace{0.08in}
+\noindent{\bf RR scheduling:} Messages are inserted into the scheduling queue of
+the network interface, as and when they arrive. During the packetization process,
+the scheduler creates one packet for a message and then moves to the next message:
+all messages are considered in a round-robin manner. 
+%However during the packetization process, the scheduler pops the top message from
+%scheduling queue, creates a packet from it and then inserts to the tail. The scheduler
+%then moves to the next message in the queue, which is currently at the top of the
+%scheduling queue. The scheduler repeats the process until all the messages in the
+%scheduling queue are packetized before it again creates a packet from the first message
+%which entered the queue initially.
+RR not only allows concurrent communication
+progress for several communicating-pairs, but may also help the network in
+better utilizing multiple communication paths. While desirable, such a scheme is
+difficult to implement in the hardware as the number of concurrent messages can
+be very large.
+
+%default first come first serve (FCFS) message
+%scheduling. 
+\vspace{0.08in}
+%In RR-N, the messages are entering the scheduling queue in the network interface
+%in a first come first serve manner with the first N message in the queue, waiting
+%for their turn of packetization. Each of those N messages is first packetized one
+%after the other. When one of the N messages is completely packetized, the immediate
+%next message in the queue takes its place. 
+
+\vspace{0.08in}
+\noindent{\bf RR-N scheduling:} In this scheme, $N$ is a parameter. RR-N is similar to RR,
+except that instead of packetizing every message in the scheduling queue in
+a round-robin manner,
+the scheduler packetizes the top $N$ messages in the scheduling queue. For example,
+in RR-2, the scheduler only packetizes the first 2 messages for communication.
+This newly added scheme simulates the real world scenario where a limited
+number of hardware queues are available at a NIC, which are used to keep
+multiple message in-flight concurrently.
+%and thus
+%packetization of only these many messages can happen concurrently.  
+
+\subsection{Simulating multi-GPU nodes in TraceR-CODES}
+\label{sec:gpu_tracer}
+
+In TraceR, computation is simulated by fast-forwarding the simulation time by a
+desired amount. Thus, to emulate GPU execution in place of a CPU, we 
+reduce the time spent in computational regions of an application
+by a certain factor. For each application, this factor is based on the 
+speed up observed by us on Sierra supercomputer in comparison to the CPU cluster
+used to collect the application traces. Further, to simulate the impact of 
+high-bandwidth links among the GPUs in a node (e.g. NV links), we added dedicated 
+communication routes among the GPUs in a node.

@@ -1,0 +1,374 @@
+@INPROCEEDINGS{Yuan2011,
+  author={Yuan, Xin},
+  booktitle={2011 IEEE International Parallel   Distributed Processing Symposium}, 
+  title={On Nonblocking Folded-Clos Networks in Computer Communication Environments}, 
+  year={2011},
+  volume={},
+  number={},
+  pages={188-196},
+  doi={10.1109/IPDPS.2011.27}}
+
+
+@ARTICLE{Yuan2009,
+  author={Yuan, Xin and Nienaber, Wickus and Duan, Zhenhai and Melhem, Rami},
+  journal={IEEE/ACM Transactions on Networking}, 
+  title={Oblivious Routing in Fat-Tree Based System Area Networks With Uncertain Traffic Demands}, 
+  year={2009},
+  volume={17},
+  number={5},
+  pages={1439-1452},
+  doi={10.1109/TNET.2009.2012853}}
+
+
+
+@inproceedings{Jain:sc2017,
+author = {Jain, Nikhil and Bhatele, Abhinav and Howell, Louis H. and B\"{o}hme, David and Karlin, Ian and Le\'{o}n, Edgar A. and Mubarak, Misbah and Wolfe, Noah and Gamblin, Todd and Leininger, Matthew L.},
+title = {Predicting the Performance Impact of Different Fat-Tree Configurations},
+year = {2017},
+isbn = {9781450351140},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3126908.3126967},
+doi = {10.1145/3126908.3126967},
+abstract = {The fat-tree topology is one of the most commonly used network topologies in HPC systems. Vendors support several options that can be configured when deploying fat-tree networks on production systems, such as link bandwidth, number of rails, number of planes, and tapering. This paper showcases the use of simulations to compare the impact of these design options on representative production HPC applications, libraries, and multi-job workloads. We present advances in the TraceR-CODES simulation framework that enable this analysis and evaluate its prediction accuracy against experiments on a production fat-tree network. In order to understand the impact of different network configurations on various anticipated scenarios, we study workloads with different communication patterns, computation-to-communication ratios, and scaling characteristics. Using multi-job workloads, we also study the impact of inter-job interference on performance and compare the cost-performance tradeoffs.},
+booktitle = {Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis},
+articleno = {50},
+numpages = {13},
+keywords = {network simulation, fat-tree topology, procurement, performance prediction},
+location = {Denver, Colorado},
+series = {SC '17}
+}
+
+@inproceedings{Kim2008ISCA,
+author = {Kim, John and Dally, Wiliam J. and Scott, Steve and Abts, Dennis},
+title = {Technology-Driven, Highly-Scalable Dragonfly Topology},
+year = {2008},
+isbn = {9780769531748},
+publisher = {IEEE Computer Society},
+address = {USA},
+url = {https://doi.org/10.1109/ISCA.2008.19},
+doi = {10.1109/ISCA.2008.19},
+booktitle = {Proceedings of the 35th Annual International Symposium on Computer Architecture},
+pages = {77-88},
+numpages = {12},
+keywords = {dragonfly, interconnection networks, topology},
+series = {ISCA '08}
+}
+
+@InProceedings{acun:padabs2015,
+author="Acun, Bilge
+and Jain, Nikhil
+and Bhatele, Abhinav
+and Mubarak, Misbah
+and Carothers, Christopher D.
+and Kale, Laxmikant V.",
+editor="Hunold, Sascha
+and Costan, Alexandru
+and Gim{\'e}nez, Domingo
+and Iosup, Alexandru
+and Ricci, Laura
+and G{\'o}mez Requena, Mar{\'i}a Engracia
+and Scarano, Vittorio
+and Varbanescu, Ana Lucia
+and Scott, Stephen L.
+and Lankes, Stefan
+and Weidendorfer, Josef
+and Alexander, Michael",
+title="Preliminary Evaluation of a Parallel Trace Replay Tool for HPC Network Simulations",
+booktitle="Euro-Par 2015: Parallel Processing Workshops",
+year="2015",
+publisher="Springer International Publishing",
+address="Cham",
+pages="417--429",
+abstract="This paper presents a preliminary evaluation of TraceR, a trace replay tool built upon the ROSS-based CODES simulation framework. TraceR can be used for predicting network performance and understanding network behavior by simulating messaging on interconnection networks. It addresses two major shortcomings in current network simulators. First, it enables fast and scalable simulations of large-scale supercomputer networks. Second, it can simulate production HPC applications using BigSim's emulation framework. In addition to introducing TraceR, this paper studies the impact of input parameters on simulation performance. We also compare TraceR with other network simulators such as SST and BigSim, and demonstrate TraceR 's scalability using various case studies.",
+isbn="978-3-319-27308-2"
+}
+
+@inproceedings{Alzaid2020ICS,
+author = {Alzaid, Zaid Salamah A and Bhowmik, Saptarshi and Yuan, Xin and Lang, Michael},
+title = {Global Link Arrangement for Practical Dragonfly},
+year = {2020},
+isbn = {9781450379830},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3392717.3392756},
+doi = {10.1145/3392717.3392756},
+abstract = {The Dragonfly network organizes routers into groups, with connectivity within each group provided by local links and connectivity between groups provided by global links. The specification of Dragonfly leaves many options for arranging global links. In this work, we study global link arrangement for practical Dragonfly topologies where (1) there are multiple global links connecting each pair of groups, and (2) the global link bandwidth is similar to the local link bandwidth. We found that existing global link arrangement schemes such as the absolute, relative and circulant-based arrangements do not specify an important component in global connectivity for practical Dragonfly, which we call per-router arrangement. Per-router arrangement determines how the global links from each individual router are connected. We integrate per-router arrangement into existing schemes, develop a unified algorithm to compute a large class of global link arrangements for practical Dragonfly, and carry out an extensive simulation study to evaluate different global link arrangement schemes. Our results indicate that the existing understanding of the global link arrangement does not apply to practical Dragonfly: contradict to the existing understanding that global link arrangement does not make significant difference in performance when global links have similar bandwidth as local links, per-router arrangement significantly impacts the network performance of practical Dragonfly. We identify the schemes that yield high performance for practical Dragonfly.},
+booktitle = {Proceedings of the 34th ACM International Conference on Supercomputing},
+articleno = {21},
+numpages = {11},
+keywords = {interconnection network, global connectivity, UGAL routing, Dragonfly},
+location = {Barcelona, Spain},
+series = {ICS '20}
+}
+
+
+
+@article{hines2018stepping,
+  title={Stepping up to summit},
+  author={Hines, Jonathan},
+  journal={Computing in science \& engineering},
+  volume={20},
+  number={2},
+  pages={78--82},
+  year={2018},
+  publisher={IEEE}
+}
+
+@incollection{knupfer2012score,
+  title={Score-p: A joint performance measurement run-time infrastructure for periscope, scalasca, tau, and vampir},
+  author={Kn{\"u}pfer, Andreas and R{\"o}ssel, Christian and an Mey, Dieter and Biersdorff, Scott and Diethelm, Kai and Eschweiler, Dominic and Geimer, Markus and Gerndt, Michael and Lorenz, Daniel and Malony, Allen and others},
+  booktitle={Tools for High Performance Computing 2011},
+  pages={79--91},
+  year={2012},
+  publisher={Springer}
+}
+
+@article{mubarak2016enabling,
+  title={Enabling parallel simulation of large-scale HPC network systems},
+  author={Mubarak, Misbah and Carothers, Christopher D and Ross, Robert B and Carns, Philip},
+  journal={IEEE Transactions on Parallel and Distributed Systems},
+  volume={28},
+  number={1},
+  pages={87--100},
+  year={2016},
+  publisher={IEEE}
+}
+
+@inproceedings{jain2016evaluating,
+  title={Evaluating HPC networks via simulation of parallel workloads},
+  author={Jain, Nikhil and Bhatele, Abhinav and White, Sam and Gamblin, Todd and Kale, Laxmikant V},
+  booktitle={SC'16: Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis},
+  pages={154--165},
+  year={2016},
+  organization={IEEE}
+}
+
+@inproceedings{kahle20192,
+  title={2.1 Summit and Sierra: Designing AI/HPC Supercomputers},
+  author={Kahle, James A and Moreno, Jaime and Dreps, Dan},
+  booktitle={2019 IEEE International Solid-State Circuits Conference-(ISSCC)},
+  pages={42--43},
+  year={2019},
+  organization={IEEE}
+}
+
+@article{leiserson1985fat,
+  title={Fat-trees: universal networks for hardware-efficient supercomputing},
+  author={Leiserson, Charles E},
+  journal={IEEE transactions on Computers},
+  volume={100},
+  number={10},
+  pages={892--901},
+  year={1985},
+  publisher={IEEE}
+}
+
+@inproceedings{acun2015preliminary,
+  title={Preliminary evaluation of a parallel trace replay tool for hpc network simulations},
+  author={Acun, Bilge and Jain, Nikhil and Bhatele, Abhinav and Mubarak, Misbah and Carothers, Christopher D and Kale, Laxmikant V},
+  booktitle={European Conference on Parallel Processing},
+  pages={417--429},
+  year={2015},
+  organization={Springer}
+} 
+
+@article{carothers2002ross,
+  title={ROSS: A high-performance, low-memory, modular Time Warp system},
+  author={Carothers, Christopher D and Bauer, David and Pearce, Shawn},
+  journal={Journal of Parallel and Distributed Computing},
+  volume={62},
+  number={11},
+  pages={1648--1669},
+  year={2002},
+  publisher={Elsevier}
+}
+
+
+@inproceedings{eschweiler2011open,
+  title={Open Trace Format 2: The Next Generation of Scalable Trace Formats and Support Libraries.},
+  author={Eschweiler, Dominic and Wagner, Michael and Geimer, Markus and Kn{\"u}pfer, Andreas and Nagel, Wolfgang E and Wolf, Felix},
+  booktitle={PARCO},
+  volume={22},
+  pages={481--490},
+  year={2011}
+}
+
+@article{barney2014using,
+  title={Using the Sequoia and Vulcan BG/Q Systems},
+  author={Barney, Blaise},
+  journal={Tutorial Lawrence Livermore National Laboratory, Lawrence Livermore National Laboratory, URL https://computing. llnl. gov/tutorials/bgq/\# ParallelIO},
+  volume={8},
+  year={2014}
+}
+
+@misc{forum1994mpi,
+  title={MPI: A message-passing interface standard},
+  author={Forum, Message P},
+  year={1994},
+  publisher={University of Tennessee}
+}
+
+@article{owens2008gpu,
+  title={GPU computing},
+  author={Owens, John D and Houston, Mike and Luebke, David and Green, Simon and
+ Stone, John E and Phillips, James C},
+  journal={Proceedings of the IEEE},
+  volume={96},
+  number={5},
+  pages={879--899},
+  year={2008},
+  publisher={IEEE}
+}
+
+@inproceedings{spafford2011quantifying,
+  title={Quantifying NUMA and contention effects in multi-GPU systems},
+  author={Spafford, Kyle and Meredith, Jeremy S and Vetter, Jeffrey S},
+  booktitle={Proceedings of the Fourth Workshop on General Purpose Processing on
+ Graphics Processing Units},
+  pages={1--7},
+  year={2011}
+}
+
+@inproceedings{kindratenko2009gpu,
+  title={GPU clusters for high-performance computing},
+  author={Kindratenko, Volodymyr V and Enos, Jeremy J and Shi, Guochun and Showe
+rman, Michael T and Arnold, Galen W and Stone, John E and Phillips, James C and
+Hwu, Wen-mei},
+  booktitle={2009 IEEE International Conference on Cluster Computing and Worksho
+ps},
+  pages={1--8},
+  year={2009},
+  organization={IEEE}
+}
+
+
+@inproceedings{bhatele2019analyzing,
+  title={Analyzing cost-performance tradeoffs of HPC network designs under different constraints using simulations},
+  author={Bhatele, Abhinav and Jain, Nikhil and Mubarak, Misbah and Gamblin, Todd},
+  booktitle={Proceedings of the 2019 ACM SIGSIM Conference on Principles of Advanced Discrete Simulation},
+  pages={1--12},
+  year={2019}
+}
+
+@inproceedings{rahman2019topology,
+  title={Topology-custom UGAL routing on dragonfly},
+  author={Rahman, Md Shafayat and Bhowmik, Saptarshi and Ryasnianskiy, Yevgeniy and Yuan, Xin and Lang, Michael},
+  booktitle={Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis},
+  pages={1--15},
+  year={2019}
+}
+
+@phdthesis{singh2005load,
+  title={Load-balanced routing in interconnection networks},
+  author={Singh, Arjun},
+  year={2005},
+  school={Stanford University}
+}
+
+@techreport{sjogreen2018sw4,
+  title={SW4 final report for iCOE},
+  author={Sjogreen, Bjorn},
+  year={2018},
+  institution={Lawrence Livermore National Lab.(LLNL), Livermore, CA (United States)}
+}
+
+@misc{sierra,
+author = {LLNL},
+title = {Sierra},
+year = {2020}, 
+howpublished = "\url{https://hpc.llnl.gov/hardware/platforms/sierra}"}
+@misc{catalyst,
+author = {LLNL},
+title = {Catalyst},
+year = {2020}, 
+howpublished = "\url{https://hpc.llnl.gov/hardware/platforms/catalyst}"}
+@misc{quartz,
+author = {LLNL},
+title = {Quartz},
+year = {2020}, 
+howpublished = "\url{https://hpc.llnl.gov/hardware/platforms/Quartz}"}
+@misc{vulcan,
+author = {LLNL\vspace{0mm}},
+title = {Vulcan},
+year = {2020}, 
+howpublished = "\url{https://asc.llnl.gov/computers/historicdecommissioned-machines/vulcan}"}
+
+@misc{aurora,
+author = {LLNL},
+title = {Aurora},
+year = {2020}, 
+howpublished = "\url{https://www.alcf.anl.gov/aurora}"}
+
+
+@misc{sequa,
+author = {LLNL},
+title = {Sequoia},
+year = {2020}, 
+howpublished = "\url{https://asc.llnl.gov/computers/historic-decommissioned-machines/sequoia-and-vulcan}"}
+
+@misc{summit,
+author = {ORNL},
+title = {Summit},
+year = {2020}, 
+howpublished = "\url{https://www.olcf.ornl.gov/summit/}"}
+
+@misc{cori,
+author = {NERSC},
+title = {Cori},
+year = {2020},
+howpublished = "\url{https://docs.nersc.gov/systems/cori/interconnect/}"}
+
+@misc{theta,
+author = {ALCF},
+title = {Theta},
+year = {2020},
+howpublished = "\url{https://www.alcf.anl.gov/alcf-resources/theta}"}
+
+
+@misc{amg,
+author = {ECP Proxy},
+title = {AMG},
+year = {2020},
+howpublished = "\url{https://proxyapps.exascaleproject.org/app/amg/}"}
+
+
+@misc{kripke,
+author = {LLNL},
+title = {Kripke},
+year = {2020},
+howpublished = "\url{https://computing.llnl.gov/projects/co-design/kripke}"}
+
+
+@misc{laghos,
+author = {LLNL\vspace{0mm}},
+title = {Laghos},
+year = {2020},
+howpublished = "\url{https://computing.llnl.gov/projects/co-design/laghos}"}
+
+@techreport{bhatele2018evaluating,
+  title={Evaluating trade-offs in potential exascale interconnect topologies},
+  author={Bhatele, A},
+  year={2018},
+  institution={Lawrence Livermore National Lab.(LLNL), Livermore, CA (United States)}
+}
+
+@article{choquette2018volta,
+  title={Volta: Performance and programmability},
+  author={Choquette, Jack and Giroux, Olivier and Foley, Denis},
+  journal={Ieee Micro},
+  volume={38},
+  number={2},
+  pages={42--52},
+  year={2018},
+  publisher={IEEE}
+}
+
+@inproceedings{alzaid2021multi,
+  title={Multi-Path Routing in the Jellyfish Network},
+  author={ALzaid, Zaid and Bhowmik, Saptarshi and Yuan, Xin},
+  booktitle={2021 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW)},
+  pages={832--841},
+  year={2021},
+  organization={IEEE}
+}
