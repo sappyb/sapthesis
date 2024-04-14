@@ -1,58 +1,102 @@
-\chapter{Introduction} 
-In recent years, the demand for High-Performance
-Computing (HPC) applications has surged, driven by the increasing complexity of
-scientific computations and data-intensive tasks. Despite the remarkable
-progress in HPC infrastructure, challenges persist in optimizing communication
-performance, particularly in modern HPC environment like cloud data centers. 
-This prospectus aims to address these challenges by
-incorporating Software-Defined Networking (SDN)~\cite{kreutz2014software} enhancements for optimizing routing for these 
-state of the art HPC environments, thereby improving the efficiency and reliability of communication
-for HPC applications.  
+\chapter{Introduction}
 
-Cloud data centers, such as those offered by GCP and
-Azure, heavily rely on fat-tree topologies ~\cite{leiserson1985fat} for their network architecture ~\cite{de2022}.
-However, the bottleneck in these systems often lies in communication efficiency,
-hindering the seamless execution of HPC applications. 
-Between 2010 and 2018, there was a remarkable 65-fold surge in 
-the computational throughput of the Top 500 HPC systems ~\cite{t500}, whereas the increase 
-in offnode communication bandwidth was comparatively modest, standing at only 4.8 times ~\cite{bergman2018empowering} ~\cite{michelogiannakis2019bandwidth}.
-By enhancing the routing
-techniques within fat-tree topologies through SDN, this research seeks to
-alleviate these bottlenecks and facilitate the deployment of HPC workloads on
-cloud platforms. Such improvements hold significant implications for scientific
-computing, enabling researchers to harness the full potential of HPC resources
-for groundbreaking discoveries across various fields.  
-
-The research methodology
-entails a comprehensive approach to maximize the performance of fat-tree
-topologies with SDN enhancements. 
-
-
-Initially, a thorough validation of the
-simulation model against real-world HPC systems, such as Quartz ~\cite{quartz}, will be
-conducted to understand the effects of network parameters (e.g., link bandwidth,
-NIC scheduling) on communication performance. 
+Large-scale systems aiming to achieve over 1 Exaflop/s of sustained performance
+are currently under construction. Unlike the systems dominating the HPC industry
+a decade ago, many of today's and future systems consist of a relatively modest
+number of nodes. For instance, Sequoia at LLNL \cite{sequa}, the fastest supercomputer in
+the Top500 list in 2012, utilized 96K nodes to achieve 20 Petaflop/s of peak
+performance. In comparison, Summit at ORNL \cite{summit}, one of the fastest
+supercomputers as of June 2020, employs approximately 4600 nodes but achieves a
+peak performance of 200 Petaflop/s. Even with a reduced node count the reduced node count, the
+communication performance achievable by applications on a system remains crucial
+for its overall performance.  The driving force behind the reduction in the
+number of nodes is compute acceleration devices such as GPUs \cite{owens2008gpu}. For example,
+an NVIDIA Volta V100 can perform 7 Teraflop/s worth of double-precision
+computation compared to 200 Gigaflop/s for a Blue Gene/Q node. However, such a
+significant increase in computing capability has not been matched by a similar
+increase in network capability. Additionally, the communication performance
+achievable by applications on a system remains crucial for its overall
+performance.  Therefore, while communication needs tend to expand at a slower
+rate compared to computational demands (e.g., analogous to the growth of surface
+area versus volume), it remains vital to determine the optimal utilization of
+existing communication capabilities and achieve an ideal balance between
+computation and communication capabilities.  The central inquiry we aim to
+address is whether a system featuring fewer nodes, each possessing greater
+computing capability, outperforms a system comprising more nodes, each with
+lesser computing capability. To investigate this, our simulations scrutinize the
+performance of identical traces of multi-job workloads across various systems
+representing distinct compute capabilities per network endpoint.
 
 
-Subsequently, three distinct SDN routing strategies will be implemented and evaluated: greedy single-path
-routing, multipath routing, and heuristic-based optimal routing. These
-strategies will be tested within a full bisection fat-tree topology to assess
-their efficacy in improving communication performance for HPC applications.  
+Software Defined Networking (SDN) \cite{kreutz2014software} has emerged as a promising technology and
+has been widely implemented across various network environments, including data
+centers, campus networks, and wide-area networks. SDN offers several notable
+features: (1) a centralized global network view for intelligent traffic and
+resource management, (2) flexible per-flow management to accommodate varying
+network traffic patterns, (3) network monitoring capabilities providing valuable
+traffic statistics, and (4) ease of integrating new network functionalities and
+services. These features empower SDN to effectively manage traffic at the flow
+level using a centralized view and optimize network resource utilization for
+improved performance compared to traditional networking infrastructures \cite{tr2016sdn}.
 
-The primary contribution of this research lies in its exploration of how network
-parameters impact communication in next-generation HPC systems. By integrating
-SDN enhancements into fat-tree topologies, novel insights will be gained into
-optimizing communication efficiency for data-centric applications. Furthermore,
-this work will extend existing knowledge by demonstrating the potential of
-SDN-driven routing techniques to significantly enhance the performance of HPC
-workloads in cloud environments.  
+While these SDN capabilities hold appeal for High-Performance Computing (HPC)
+systems and applications, SDN adoption within the HPC domain remains limited.
+One reason for this is the absence of clear evidence demonstrating SDN's
+superiority over existing networking technologies in high-end HPC systems that
+employ sophisticated routing schemes. Existing SDN methodologies are primarily
+tailored for internet and data-parallel applications like Hadoop and map-reduce
+applications \cite{he2016firebird}, which have communication characteristics different from those
+of HPC applications. Consequently, to achieve optimal performance on SDN-based
+systems, novel techniques that consider the unique communication patterns of HPC
+applications are of utmost importance. Many HPC applications involve simulating physical
+processes across numerous time steps, where each step entails similar tasks.
+This results in phased behavior characterized by alternating computation and
+communication phases often
+repeating across different time steps and being static, as known to application
+developers \cite{faraj2002communication} \cite{hong2013achieving}. Leveraging such static communication information can enhance
+SDN's ability to support communications effectively and perform tasks
+efficiently. Considering these characteristics, I develop SDN techniques
+tailored for HPC systems. Flow identification plays a crucial role in this
+process, as accurately classifying flows is essential for achieving high
+performance in an SDN-capable network. 
 
-The structure of this prospectus aligns with
-the outlined research objectives. Chapter 2 will provide a comprehensive
-overview of interconnection technologies and SDN fundamentals. In Chapter 3, the
-focus will shift to examining the influence of network parameters on modern HPC
-systems. Chapter 4 will delve into the implementation of SDN enhancements within
-HPC environments and evaluate their impact on application performance. Finally,
-Chapter 5 will offer concluding remarks and insights derived from the research
-findings.
+The focus of this work lies particularly on
+identifying elephant flows \cite{he2016firebird}, which are flows with substantial data volumes,
+as they typically dominate communication time in HPC applications. Subsequently,
+we devise SDN-enhanced routing functions to adeptly schedule these elephant
+flows and allocate optimal network resources. Building upon the first part of the work done 
+on optimal system configurations, we will evaluate these new algorithms across
+various interconnect topologies.  Such evaluations hold significant implications
+for scientific computing, enabling researchers to harness the full potential of
+HPC resources for groundbreaking discoveries across various fields.
+
+
+
+Our research primarily focuses on the following:
+
+\begin{itemize} 
+\item Using end-to-end system simulations to explore the
+performance impact of various hardware design and parameter choices for
+GPU-based systems. Conducting sensitivity study of the overall performance with respect to
+a decrease or increase in the available network bandwidth, impact of message
+scheduling on performance, and the impact of the increase of per node
+computational capacity and the reduction of network endpoints on the performance
+of multi-job workloads.  
+\item Investigating the influence of SDN on HPC
+environments, whether SDN can improve the communication performance for HPC
+systems, and whether our proposed techniques result in higher communication
+performance in SDN- capable interconnect topologies than existing schemes.
+\end{itemize} 
+This work will extend existing knowledge by demonstrating the
+potential of SDN to significantly enhance the performance of HPC workloads in
+HPC environments.
+
+
+The structure of this prospectus aligns with the outlined research objectives.
+Chapter 2 will provide a comprehensive overview of interconnection technologies
+and SDN fundamentals. In Chapter 3, I will examine the
+influence of network parameters on modern HPC systems. Chapter 4 will delve into
+the implementation of SDN enhancements within HPC environments and evaluate
+their impact on application performance. Finally, Chapter 5 will offer
+concluding remarks and insights derived from the research findings.
 

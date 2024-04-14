@@ -1,13 +1,34 @@
-\chapter{Techniques to Utilize SDN for optimally running HPC applications} In
-this study , we tackle the challenge of incorporating Software Defined
+\chapter{Design and Evauation of Techniques for HPC platforms with SDN-capable Interconnects} In
+this study, we tackle the challenge of incorporating Software Defined
 Networking (SDN) for optimally running High-Performance Computing (HPC)
-applications. As more data centers start to offer HPC support, there's a growing
+applications. As more HPC environments have SDN capabilities, there's a growing
 need to manage the HPC applications communication across the underlying network
 efficiently \cite{kreutz2014software, alalmaei2020sdn, he2016firebird,}. 
-Most of
-these data centers use a network layout called fat-tree topology which usually
-has support for SDN. SDN helps by making the network smarter, so it can handle
-the intense network resource demands of HPC applications better. The general
+SDN helps by making the network smarter, so it can handle
+the intense network resource demands of HPC applications better. 
+
+
+In our work, we try to accomplish on the below objectives:
+\begin{itemize}
+\item We propose to have an network API to
+allow users to indicate whether a communication is an elephant flow or not. This
+would release the network system from classifying such flows.
+
+\item We want to create a three routing algorithm which we can implement inside our
+SDN controller, these routing functions help to load balance the network traffic
+by efficiently scheduling the bandwidth heavy elephant flows which are classfied by our API.
+
+
+\item Finally, we want to do a thorough simulation based evaluation of our techinques developed
+in different node to rank mapping configurations.
+\end{itemize}
+
+In the following sections we propose about the details of flow identification, SDN-enabled flow scheduling,
+topology and job mappings which we are going to do in our work. 
+
+
+\section{Flow Identification}
+The general
 workload characteristics of an HPC application are vastly different from
 traditional data center applications. First, HPC applications are often
 massively parallelized, with various programming paradigms and libraries such as
@@ -26,27 +47,11 @@ part in communication.
 Our main objective is to harness the power of SDN to run HPC application which are 
 very different from data center application in Data Centers.
 
- SDN usually has two kinds of flows elephant flows that
+SDN usually has two kinds of flows elephant flows that
 carry large amounts of data from a source to a destination. These flows
 constitute a bulk of the network traffic and are sensitive to network bandwidth.
 Mice flows on the other hand carry small amount of data from source to
 destination \cite{yang2020flow, afek2015sampling}, and are latency sensitive.
-
-In our work, we try to accomplish on the below objectives:
-\begin{itemize}
-\item We propose to have an network API to
-allow users to indicate whether a communication is an elephant flow or not. This
-would release the network system from classifying such flows.
-
-\item We want to create a three routing algorithm which we can implement inside our
-SDN controller, these routing functions help to load balance the network traffic
-by efficiently scheduling the bandwidth heavy elephant flows which are classfied by our API.
-
-\item Finally, we want to do a thorough simulation based evaluation of our techinques developed
-with static and adaptive routings which are used in fat-tree topology.
-\end{itemize}
-
-
 
 For HPC applications like the ones in Stencil4d shown in Figure \ref{code.stencil}, SDN
 users (HPC application developers, compiler, or communication library) have the
@@ -105,9 +110,10 @@ LagrangianHydroOperator (...){
 \end{lstlisting}
 \end{figure}
 
-We propose to develop a routing algorithm which aims to load balance the network traffic using the 
-global view of a network through the SDN controller.
 
+\section{SDN-enabled flow scheduling}
+We propose to develop routing algorithm which aims to load balance the network traffic using the 
+global view of a network through the SDN controller.
 We intially use a greedy approach which calculates the maximum link load for all available
 paths for each elephant flow, and then adds whichever path has the minimum of the maximum link load 
 -that is adds the path which is least heavily loaded for routing the elephant flow. 
@@ -121,12 +127,15 @@ path, and use the one which has the lowest buffer load among the k paths to rout
 we try to develop an optimal single path routing for our research, which tries to find a non-blocking path for 
 every elephant flow in a permutation in a full bisection bandwidth fat-tree.
 
+
+\section{Topology}
 We evaluate our three SDN enhanced routing schemes, two single path routing and one multipath
 routing, with both the widely popular static routing scheme in fat-tree called D-mod-k and the adaptive 
 routing which is used in fat-trees. All our routing is schemes are evaluted on two different size
 topologies, one mid-sized topology of 512 compute nodes and large-sized topology of 1024 compute
 nodes. We evalute the developed techniques across 5 different applications, which are random permutation,
 near neighbour, nekbone, lammps and milc; we discussed the applications in chapter 2. 
-We chose this set of traffic patterns, as it gives a good mix 
-of synthetic traffic, proxy application and real application, and covers all of the major HPC applications.
+
+\section{Job Mapping}
+We explore the influence of node-to-rank mapping in our HPC system applications, with particular emphasis on two methods: linear mapping and random mapping. Linear mapping organizes job ranks on nodes sequentially, maintaining spatial proximity between ranks. However, due to node fragmentation in real systems, complete linear mapping isn't always feasible, leading to a blend of linear and random mapping for job ranks. Consequently, it becomes necessary to assess the effects of random mapping, where job ranks are assigned to available nodes randomly. This random assignment increases spatial distance between job ranks, consequently intensifying network resource usage for communication. To facilitate this evaluation, we interface our preferred mapping with the simulator via an API compatible with the simulator's network model
 
