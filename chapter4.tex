@@ -1,6 +1,6 @@
 \chapter{Design and Evauation of Techniques for HPC platforms with SDN-capable Interconnects} In
-this study, I tackle the challenge of incorporating Software Defined
-Networking (SDN) for optimally running High-Performance Computing (HPC)
+my research for the disseretation, I propose to solve the challenge of incorporating Software Defined
+Networking (SDN) for efficiently running High-Performance Computing (HPC)
 applications. SDN is a new paradigm that is successful in other domains, but has not
 been fully explored in HPC \cite{kreutz2014software, alalmaei2020sdn, he2016firebird}. 
 SDN offers several advantages such as
@@ -14,113 +14,93 @@ SDN offers several advantages such as
 \end{itemize}
 All the above advantages can be applied to the HPC environment. 
 The goal of this research is to develop and
-evaluate SDN techniques for HPC environments. I focus on these five areas:
+evaluate SDN techniques for HPC environments. I focus on these five areas which are (1) flow identification where we identify the types network flows, (2) SDN-enabled flow scheduling where we scheduling the different types of network flows, (3) impact of topology and routing schemes where we evaluate how the flow identification and SDN-enabled flow scheduling performs in state-of-the-art HPC topologies along with their respective routings, (4) SDN-aware communication where we try to evaluate if MPI collective communication algorithms can be changed based on the SDN knowledge about the network, and finally (5) SDN-aware job scheduling where we try to evaluate job placements based on SDN knowledge about the network.
 
 
-\begin{comment}
-This work attempts to accomplish the following objectives:
-\begin{itemize}
-\item To have an network API,
-allowing users to indicate whether a communication is an elephant flow or not. This
-would release the network system from classifying such flows.
 
-\item To create routing algorithm which can be implemented inside a
-SDN controller, these routing functions help to load balance the network traffic
-by efficiently scheduling the bandwidth heavy elephant flows which are classfied by the API.
-
-
-\item To run a thorough simulation based evaluation of the techinques developed
-in different node to rank mapping configurations.
-\end{itemize}
-
-The following sections propose the details of flow identication, SDN-enabled flow scheduling, topology and job mappings in this project.
-\end{comment}
 
 \section{Flow Identification}
 
-\textcolor{blue}{What is it?}
+%\textcolor{blue}{What is it?}
 
 In the context of SDN, network traffic usually has two kinds of flows. Elephant flows 
 carry large amounts of data from a source to a destination. These flows
 constitute a bulk of the network traffic and are sensitive to network bandwidth.
 Mice flows on the other hand, carry a small amount of data from source to
-destination \cite{yang2020flow, afek2015sampling}, and they are latency sensitive. For
-applications I use, any flow that carries more than 100KB data is an elephant flow, and any other is a
-mice flow.
-
-
-\textcolor{blue}{Why you do it?}
-
-By identifying elephant flows, SDN controllers can allocate network resources more effectively. The controller, armed with knowledge about these bandwidth-intensive flows, can prioritize and allocate appropriate links to handle their traffic. This proactive approach helps prevent congestion and ensures that critical flows receive sufficient bandwidth, leading to improved overall network performance.
-
-\textcolor{blue}{How to do it?}
-
-If the user knows
-both the mapping of the ranks to nodes in the HPC system during the running of the
-application and also the data sent in the MPI calls, they can determine the
-communication characteristics of the application in the actual system, and can
-determine which flows are elephants and which are mice when a HPC application
-starts running on a system. 
-In most HPC applications like the ones in Stencil4D shown in Figure \ref{code.stencil}, SDN
-users (HPC application developers, compiler, or communication library) have the
-knowledge of communication happening inside the program during the compile time.
-Additionally, these set of neighbours determined in the compile time usually 
-do not change during the runtime, which gives the user the
-ability to correctly predict the communication characteristics 
-To identify an elephant flow, the information about the message size of the
-flow is needed. Therefore, in this project application is run initially with a certain node to rank mapping, and the
-amount of data sent in each flow is collected. This data is stored in a matrix and then a program is used to filter
-flows which send more than a certain threshold, which in my case is 100KB of data across a interval of 0.3 seconds.  
-These flows are classified as elephant flows. The API gurantees that the user has ground truth about
-the classified flows which happen in a network when a specific set of HPC applications are run on that 
-system.
-
-\textcolor{blue}{Significance of results?}
-
-HPC applications tackle massive computations and data transfers, needing fast, responsive network connections. When researchers pinpoint the types of network flows(such, elephant flows and mice flows) these applications generate and simulate how they behave; they can understand how different factors like network topology and routing methods affect performance. Armed with this knowledge, they can fine-tune network designs to better suit the unique needs of various workloads, paving the way for more efficient systems down the road.
-
+destination \cite{yang2020flow, afek2015sampling}, and they are latency sensitive. 
+Flow identification is classification of network flows into elephant flows or mice flows.
 \begin{comment}
- First, HPC applications are often
-massively parallelized, with various programming paradigms and libraries such as
-Message Passing Interface (MPI) \cite{forum1994mpi}. The huge amount of computation that is
-required in the application is divided into smaller computations and runs on
-multiple computing nodes. Second, many HPC applications are tightly coupled –
-there are dependencies among the parallel processes and the processes need to
-communicate with each other during execution. Since many HPC applications
-simulate physical phenomena in many iterations, the applications exhibit phased
-behavior during execution with alternating communication and computation phases.
-Communications in different iterations are often the same or have similar
-characteristics. One common communication pattern for HPC applications is
-nearest-neighbor where all the ranks which are spatially near each other take
-part in communication. 
-The main objective of this project is to harness the power of SDN to run HPC applications efficiently.
-For HPC applications like the ones in Stencil4D shown in Figure \ref{code.stencil}, SDN
-users (HPC application developers, compiler, or communication library) have the
-knowledge of whether a communication is an elephant flow or not. The code indicates
-that each node sends eight communication messages to its neighbors.
-Additionally, since the neighbors are determined only during the compile time
-and the set of neighbours do not change during the runtime, the user has the
-ability to correctly predict the communication characteristic. 
-If the user knows
-both the mapping of the ranks to nodes in the HPC system during the running of the
-application and also the data sent in the MPI calls, they can determine the
-communication characteristics of the application in the actual system, and can
-determine which flows are elephants and which are mice when a HPC application
-starts running on a system. 
-Even for some communications where the
-destination is unknown such as the Lagos shown in
-Figure \ref{code.laghos}. The API can be used to indicate that the unknown destination flow is
-an elephant flow as long as the user can determine that the message size of the
-communication is sufficiently large.
-To identify an elephant flow, the information about the message size of the
-flow is needed. Therefore, in this project application is run initially with a certain node to rank mapping, and the
-amount of data sent in each flow is collected. This data is stored in a matrix and then a program is used to filter
-flows which send more than a certain threshold of data across the entire simulation. 
-These entire program is packaged in an API which classifies the flows as elephant flows. 
-This API, gurantees that the user has ground truth about
-the communication which happens in a network when a specific set of HPC applications are run on that 
-system.
+For
+applications I use, any flow that carries more than a certain threshold of data is an elephant flow, and any other is a
+mice flow.
 \end{comment}
+
+
+%\textcolor{blue}{Why you do it?}
+
+By identifying elephant flows, SDN controllers can allocate network resources more 
+effectively. The controller, armed with knowledge about these 
+bandwidth-intensive flows, can prioritize and allocate appropriate 
+links to handle their traffic. This proactive approach helps prevent 
+congestion and ensures that critical flows receive sufficient bandwidth, 
+leading to improved overall network performance.
+
+%\textcolor{blue}{How to do it?}
+To effectively support SDN, we develop and evaluate 
+SDN techniques that take these characteristics into 
+consideration. Our techniques can be classified into 
+two types: those with no extra user information and those with user information.
+\subsection{Classifying flows without user information}
+
+First, I propose to use a pure threshold based method, in which elephant flows are 
+detected at the edge switches at each polling interval based on 
+the amount of data sent. If the amount of data sent is more than the threshold,
+then it is an elephant flow. 
+\begin{comment}
+However, in the HPC environment, depending on applications, 
+the time for each iteration may be much less than a second. 
+Hence, these existing flow classification schemes will miss many 
+iterations of application execution and are not effective for such HPC applications.
+\end{comment}
+Second, I propose a Deep learning-based scheme, where I try to train a Deep Neural Network(DNN)
+which is using the network packets transmision sequence from HPC workloads which are classified
+into elephant and mice flows. In this way,
+the DNN model is able to recognize the patterns of elephant flows in HPC applications in a 
+smaller period of time.
+
+ 
+
+\subsection{Classifying flows with user information}
+Static communications are communications whose
+information can be determined at compile time. In MPI, major portion of
+communication is static, that is, it can be determined during compile time. 
+For static communications in HPC applications like the ones in Stencil4d 
+shown in Figure \ref{Stencil4d Code snippet}, 
+the HPC application developer (or compiler and communication library) 
+has the knowledge whether a communication is an elephant flow or not. 
+If the SDN allows HPC applications (SDN users) to give hints about 
+their communications, the flow identification task performed by the 
+SDN can be greatly simplified. To facilitate this, we propose to have 
+an API for SDN users to provide such information which can help in 
+classifying the elephant and the mice flows.
+\begin{comment} 
+The most complete information about a point-to-point communication i
+ncludes the source MPI rank, the destination rank, and the message size. 
+Based on the information the users can give the hint when the 
+application is loaded (when MPI ranks are mapped to physical nodes).
+\end{comment}
+
+
+%\textcolor{blue}{Significance of results?}
+
+HPC applications deal with massive computations and data transfers, 
+needing fast, responsive network connections. When SDN-controllers
+pinpoint the types of network flows (such as elephant flows and mice flows) 
+these applications generate, it helps to route the bandwidth heavy elephant flows
+ through links which are not shared by too many elephant flows, so that each
+ of them can get sufficient bandwidth. This reduces the overall congestion 
+in the network and the applications run more efficiently.
+
 
 \begin{figure}[hbtp]
 \caption{Stencil4d Code snippet}
@@ -139,63 +119,108 @@ for (int i = 0; i < MAX_ITER; i++) {
 \end{figure}
 
 
-\begin{comment}
-\begin{figure}[hbtp]
-\caption{Laghos Code snippet}
-\label{code.laghos}
-\begin{lstlisting}[breaklines]
-LagrangianHydroOperator (...){
-        ...
-        ParMesh *pm = H1FESpace.GetParMesh();
-        MPI_Allreduce(&loc_area, &glob_area, 1, MPI_DOUBLE, MPI_SUM, pm->GetComm
-());
-        ...
-}
-\end{lstlisting}
-\end{figure}
-\end{comment}
 
 \section{SDN-enabled flow scheduling}
-This research proposes to develop a routing algorithm which aims to load balance the network traffic using the 
+
+%\textcolor{blue}{What is it?}
+SDN-enabled flow scheduling builds on top of the previous method 
+of flow identification, after the SDN-controller classifies the
+network flows as elephant or mice flows, it uses the network state (e.g. network
+topology, link loads) and number of elephant flows to generate a routing table 
+which can be used to schedule all the elephant flows efficiently. 
+
+%\textcolor{blue}{Why you do it?}
+SDN-enabled flow scheduling aims to reduce the network congestion by ensuring that bandwidth
+intensive network flows get sufficient bandwidth to transfer their data from source node to 
+destination node.
+
+%\textcolor{blue}{How you do it?}
+I proposes to develop routing algorithms which aim to load balance the network traffic using the 
 global view of a network through the SDN controller.
-The algorithm intially uses a greedy approach which calculates the maximum link load for all available
-paths for each elephant flow, and then adds whichever path has the minimum of the maximum link load 
--that is adds the path which is least heavily loaded for routing the elephant flow. 
-The subnet manager provided by the SDN accumulates information
-about the network state and flows over the polling interval. If the SDN
-scheduler has no prior knowledge about the network flows, it uses D-mod-k routing.
-At each polling interval, the traffic classification provided by the user is forwarded to the SDN scheduler 
-to obtain a load-balanced routing table for the subsequent interval. This load balance schedule is a single 
-path schedule. In this work, I also propose developing a multipath routing, where the buffer load for k least loaded
-path is analysed, and the one which has the lowest buffer load among the k paths is used to route our network flow at every 
-polling interval in the SDN controller. Finally,
-the project proposes to develop an optimal single path routing, which tries to find a non-blocking path for 
-every elephant flow in a permutation in a full bisection bandwidth fat-tree. This path is calculated in the SDN controller and 
-updated in every polling interval. The significance of this research lies in its development of routing algorithms tailored for Software-Defined Networking (SDN) controllers. By focusing on efficient traffic management, adaptability to changing network conditions, and optimization for high-demand scenarios, this work addresses critical challenges in network performance and scalability.
+I propose to develop three algorithms to optimally schedule the elephant flows. I 
+try to develop a greedy approach which 
+adds the path which is least heavily loaded for routing the elephant flow, an optimal single path routing, which tries to find a non-blocking path for 
+every elephant flow in a permutation in a full bisection bandwidth fat-tree. 
+and a multipath routing, where the buffer load for k least loaded
+paths is analysed, and the one which has the lowest buffer load among the k paths is used to route the elephant flow. 
+
+I then compare how the proposed algorithms perform with respect to other representative routing techiques like static and adaptive routing.
+
+%\textcolor{blue}{Significance of the result}
+The significance of this research lies in its development of routing algorithms tailored for Software-Defined Networking (SDN) controllers. By focusing on efficient traffic management, adaptability to changing network conditions, and optimization for high-demand scenarios, this addresses critical challenges in network performance.
 
 
 \section{Impact of topology and routing schemes}
-\begin{comment}
-The project tries to evaluate all the SDN enhanced routing schemes, two single path routing and one multipath
-routing, with both the widely popular static routing scheme in fat-tree called D-mod-k and the adaptive 
-routing which is used in fat-trees. All the routing is schemes are evaluted on two different size
-topologies, one mid-sized topology of 512 compute nodes and large-sized topology of 1024 compute
-nodes. The project evalutes the developed techniques across 5 different applications, which are random permutation,
-near neighbour, nekbone, lammps and milc; discussed the applications in chapter 2. 
-\end{comment}
+
+%\textcolor{blue}{What is it?}
+
 Topology and routing schemes can significantly impact the effectiveness
-of SDN for supporting HPC applications. I propose to study a number of
+of SDN for supporting HPC applications. 
+
+%\textcolor{blue}{How to do it?}
+I propose to study a number of
 widely used interconnect configurations in the HPC environment: fat-tree
-with deterministic routing, fat-tree with adaptive routing, and dragonfly
-between the processes happening in a way which uses the network resources efficiently.
- SDN techniques will be developed and evaluated for
+with deterministic routing, fat-tree with adaptive routing, and dragonfly.
+SDN techniques will be developed and evaluated for
 these configurations. 
-The results will give insight about the potential of different network architectures in conjunction with SDN to optimize performance, scalability, and resource utilization in HPC environments. This understanding will not only inform network design decisions but also contribute to the development of tailored SDN solutions that effectively address the unique challenges posed by high-performance computing workloads.
+
+%\textcolor{blue}{Significance of the result}
+The results will give insight about the potential of different 
+network architectures in conjunction with SDN to optimize 
+performance, scalability, and resource utilization in HPC environments. 
+This understanding will not only inform network design decisions but 
+also contribute to the development of tailored SDN solutions that 
+effectively address the unique challenges posed by high-performance computing workloads.
 
 
 \section{SDN-aware communication}
-MPI collective communications, such as MPI All-to-all, rely on different algorithms like Recursive Doubling, Bruck's Algorithm, and Gather-Scatter Algorithm. Each of these algorithms alters the communication behavior of the application. Leveraging Software-Defined Networking (SDN), I aim to create an SDN-aware communication system. By utilizing network state information from SDN, I will design an algorithm that optimizes communication between processes, ensuring efficient use of network resources.
+
+%\textcolor{blue}{What is it?}
+MPI collective communications, such as MPI All-to-all, 
+rely on different algorithms like Recursive Doubling, 
+Bruck's Algorithm, and Gather-Scatter Algorithm. 
+Each of these algorithms alters the communication behavior inside the application. 
+By utilizing the network state information from SDN, SDN-aware communication 
+tries to modify these MPI collective algorithms so that they can run efficiently. 
+
+\begin{comment}
+\textcolor{blue}{How you do it?}
+I select the MPI collective algorithm MPI Allreduce. From the SDN-controller I get the
+network topology information and the ranks placement across the network
+topology. With this information, I try to select only those ranks in my algorithm
+ which needs to make heavy communication as close as possible in the physical network.
+I then compare the performance with a regular MPI Allreduce.
+\end{comment}
+%\textcolor{blue}{Significance of the result}
+The results will give insight about the potential of how changing the algorithm 
+of an MPI collective according to the information received from SDN can have an effect in 
+performance improvement. Moreover, if SDN information can be used for modifying
+the MPI collective algorithm, then there can be an efficient algorithm which can work
+across a varied set of topologies like fat-tree and dragonfly as long as they have 
+SDN support. 
+
+
 
 \section{SDN-aware job scheduling}
-This work explores the influence of node-to-rank mapping in our HPC system applications, with particular emphasis on three methods: linear mapping, random mapping, and SDN-aware job scheduling. Linear mapping organizes job ranks on nodes sequentially, maintaining spatial proximity between ranks. However, due to node fragmentation in real systems, complete linear mapping is not always feasible, leading to a blend of linear and random mapping for job ranks. Consequently, it becomes necessary to assess the effects of random mapping, where job ranks are assigned to available nodes randomly. This random assignment increases spatial distance between job ranks, consequently intensifying network resource usage for communication. To facilitate this evaluation, my preferred mapping is interfaced with the simulator via an API compatible with the simulator's network model. Finally, I also develop a job mapping strategy based on the 
-flow classification where I incorporated the network flow classification done by the API into elephant and mice flows to create a job placement such that heavily communicating flows get the maximum bandwidth possible. The significance of this work lies in its investigation of the impact of node-to-rank mapping strategies on the performance of HPC system applications. By examining three distinct methods - linear mapping, random mapping, and SDN-aware job scheduling - the research sheds light on how different mapping approaches influence spatial proximity between job ranks and subsequent network resource usage for communication.
+
+%\textcolor{blue}{What is it?}
+SDN-aware job scheduling uses network and traffic information from
+SDN to efficiently map the job ranks to physical nodes on the system 
+so that the network has the least congestion when a job runs.
+
+%\textcolor{blue}{How to do it?}
+
+I aim to evelop a job mapping strategy based on the 
+flow classification where I incorporated the network flow 
+classification done by the API into elephant and mice flows 
+to create a job placement such to get the maximum bandwidth possible. 
+We compare this new technique with linear and random mapping of ranks to nodes.
+
+%\textcolor{blue}{Significance of the result}
+
+By examining three distinct 
+methods - linear mapping, random mapping, and SDN-aware job scheduling - 
+the research sheds light on how using information provided by SDN 
+job scheduling can help to improve job performance, and minimize
+variability, and interference. 
+
