@@ -158,7 +158,7 @@ Finally, I have Universal Globally Adaptive Load-Balanced Routing (UGAL) \cite{k
 \section{HPC Applications}
 In the realm of High-Performance Computing (HPC), applications span a wide spectrum, including real-world problem-solving (a.k.a. real applications), proxy modeling (a.k.a. proxy applications), and synthetic traffic. Whether simulating climate patterns, optimizing financial portfolios, or deciphering genomic data, all HPC applications share a common iterative structure. Each iteration entails a sequence of computational tasks executed in parallel, followed by communication and synchronization steps. These iterations form the backbone of HPC workflows, where complex computations are distributed across vast computational resources. As data flows through the system, results are exchanged, aggregated, and synchronized to drive iterative refinement and convergence.
 
-\textcolor{red}{In my work I have chosen a set of benchmarks which is represents the diverse HPC workloads, to ensure that the performance evaluation of my algorithms is comprehensive and applicable across a wide array of HPC scenarios.}
+In my work I have chosen a set of benchmarks which is represents the diverse HPC workloads, to ensure that the performance evaluation of my algorithms is comprehensive and applicable across a wide array of HPC scenarios.
 The following is a brief description of the applications I used in this work:
 
 \begin{itemize}
@@ -173,6 +173,52 @@ The following is a brief description of the applications I used in this work:
 \item \textbf{Nekbone}: Solves 3D Poisson problem in rectangular geometry. The key MPI operations are matrix-matrix multiplication, inner products, nearest neighbor communicaton, MPI\_Allreduce \cite{gong2016nekbone}.
 \item \textbf{MILC}: Performs four dimensional SU(3) lattice gauge theory, mainly through near-neighbour communication and MPI\_Allreduce \cite{gottlieb2001benchmarking}.
 \end{itemize}
+
+While evaluating these diverse HPC benchmarks, it is essential to understand the communication characteristics that fundamentally influence their performance and scalability. HPC applications typically exhibit two primary communication characteristics: regular (static) and irregular (dynamic and dynamically analyzable) communication patterns. Recognizing these patterns allows for more precise optimization of network resources, thereby enhancing overall efficiency and performance.
+
+\begin{itemize}
+\item \textbf{Regular communication} Regular, or static, communication in HPC applications involves predictable and repetitive data exchanges that are determined before the execution of the application. This type of communication includes static communication patterns where the source and destination nodes, as well as the message sizes, are all known during compile time. Figure ~\ref{code.stencil} displays an MPI code segment of Stencil4d, a representative HPC kernel.
+This kernel performs nearest neighbor communication: each process communicates with its 8 neighbors (front/back, top/bottom, left/right, and north/- south) in the 4-dimension domain with 8 MPI Isends and 8 MPI Irecvs. The figure only shows one MPI Isend and one MPI Irecv since the others are similar. The communicator MPI COMM WORLD remains fixed during the execution, and the source and destination, in this case process north of the present node, as well as the message size are known before the application executes. Hence, these communications are static. 
+Most communications in HPC applications are static, allowing for more straightforward optimization and improved overall performance by leveraging the predictability of these communication patterns.
+
+\item \textbf{Irregular communication} Irregular communication in HPC applications includes both dynamic and 
+dynamically analyzable communication patterns. 
+In dynamically analyzable communication, the source and destination nodes
+, as well as message sizes, can be determined at runtime but not 
+during compile time. For dynamic communication, these parameters cannot be determined 
+until after the communication has occured. Figure ~\ref{code.laghos} displays an MPI code segment of the primary solver function for Laghos. In Laghos, a new communicator is established each time the function is called, and communications are performed in that communicator as can be seen in Line 3 of the figure. The communication information for this application is unknown until the communication is performed and the communications are thus dynamic.
+
+\end{itemize}
+
+\begin{figure}[hbtp]
+\caption{Stencil4d Code snippet}
+\label{code.stencil}
+\begin{lstlisting}[breaklines]
+for (int i = 0; i < MAX_ITER; i++) {
+        MPI_Isend(sendn, 100000000, MPI_CHAR, north, 9, MPI_COMM_WORLD, &reqs[0]
+);
+        ...
+        MPI_Irecv(recvn, 100000000, MPI_CHAR, north, 9, MPI_COMM_WORLD, &reqs[8]
+);
+        ...
+        MPI_Waitall(16, req status);
+}
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[hbtp]
+\caption{Laghos Code snippet}
+\label{code.laghos}
+\begin{lstlisting}[breaklines]
+LagrangianHydroOperator (...){
+        ...
+        ParMesh *pm = H1FESpace.GetParMesh();
+        MPI_Allreduce(&loc_area, &glob_area, 1, MPI_DOUBLE, MPI_SUM, pm->GetComm
+());
+        ...
+}
+\end{lstlisting}
+\end{figure}
 
 \section{Software Defined Network}
 Software Defined Network(SDN) is a modern networking scheme where, the organization of network functionality is often conceptualized into three distinct layers: the data plane, the control plane, and the management plane \cite{kreutz2014software}. Each layer serves a critical role in facilitating the efficient operation and management of the network infrastructure.
