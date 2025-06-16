@@ -1,0 +1,51 @@
+Flow information used to
+classify elephant flows in current phase should ignore the flow information for the flows in the
+previous phase as these two set of flows  don't occur together.
+In order to
+determine if the network is in a communication phase, the network must be
+probed at intervals smaller than the polling interval to check if data is being
+sent above a certain threshold. If it is, then the network is in a
+communication phase; otherwise, it is mostly in a computation phase.
+If the
+network transitions from a computation phase to a communication phase or vice versa during
+probing, previous flow informations are disregarded, and the flow
+informations for each flow in the current phase is considered for
+prediction. 
+
+Without user input, communication phases in HPC applications can be
+identified using the algorithm described in Algorithm~\ref{alg:phase_detection}.
+The phase detection algorithim takes the polling interval, threshold for communication
+and number of sub intervals within a polling interval as input. The phase detection 
+keeps on happening at every X/r intervals for the entire application run. 
+The output of the algorithm is the current phase of the application. Initially, the
+algorithm starts in computation phase. At every X/r interval of time, the data sent by all leaf
+switches in the network are collected. This data when aggregated together represents the total communication data
+inside the network in that respective interval. The algorithm then checks if this aggregated data is more than the 
+threshold for considering the network to be in communication phase. If the aggregated data is more than the 
+threshold and the previous phase is a computation phase then there is transition and the current phase become communication.
+In case, the previous phase is communication phase then there is no tranistion and the application continues to be in communication phase.
+Whenever there is a change of 
+phase, the flow informations for the flows in previous phase is ignored.
+
+\begin{algorithm}
+\DontPrintSemicolon
+
+\caption{Phase identification algorithm}
+\label{alg:phase_detection}
+
+\KwInput{Threshold $p$, Polling interval $X$, Number of sub intervals $r$}
+\KwOutput{Current phase $Current\_phase$}
+
+$Previous\_phase \gets$ computation\;
+%$flow\_data \gets$ data for all flows\;
+\For{each interval of $X/r$}{
+    $Data\_sent \gets$ data sent by all leaf switches\;
+    \If{($Data\_sent > p$) and ($Previous\_phase$ == computation)}{
+        $Current\_phase \gets$ communication\;
+    }
+    \ElseIf{($Data\_sent < p$) and ($Previous\_phase$ == communication)}{
+        $Current\_phase \gets$ computation\;
+    }
+    $Previous\_phase \gets Current\_phase$\;
+}
+\end{algorithm}

@@ -1,0 +1,53 @@
+I perform extensive experiments using the TraceR-CODES simulator~\cite{jain2016evaluating,mubarak2016enabling}, which I have extended to support the study of the SDN techniques discussed in this work. TraceR-CODES is a software tool suite used for performance analysis of parallel and distributed applications, and it is specifically designed to simulate large-scale scientific applications running on high-performance computing systems.
+
+To support my experiments, I have integrated the trained DNN model into the simulator using Google TensorFlow's C APIs. To ensure compatibility with the TensorFlow libraries, I carefully selected the MPI and GNU compiler standards. In particular, I utilized MVAPICH 2 as the MPI implementation and adopted C++14 from GNU version 9.0.1 as the compiler standard.
+
+By leveraging real-time network statistics, my DNN model dynamically predicts network flows during the simulation runtime. This capability not only enhances prediction accuracy but also enables real-time data processing, making the model both robust and efficient.
+
+In addition to evaluating SDN-based routing, I also investigate the impact of hardware design characteristics on performance using the Fat-tree connection topology. The Fat-tree topology is a well-established interconnect architecture commonly employed in HPC systems and data centers. I conduct simulations on two distinct Fat-tree configurations: a 1024-node full-bisection Fat-tree and a 1536-node tapered Fat-tree with a 3:1 oversubscription ratio. In both configurations, each switch is equipped with 32 ports, and each leaf switch connects to 16 compute nodes. Importantly, all 32 ports of the core and aggregate switches are fully utilized, connecting exclusively to other switches to preserve the hierarchical structure of the topology.
+
+In this study, I explore three types of SDN routing mechanisms:
+
+SDN-greedy, which allocates paths by minimizing congestion in real time using simple heuristics;
+
+SDN-optimal, which computes globally least-congested paths by evaluating all possible routes;
+
+SDN-adaptive, which dynamically adjusts routing decisions based on the current traffic patterns and flow types.
+
+For flow classification, I employ three distinct strategies:
+
+Threshold-based, where flows are classified as elephant or mice based on a predefined data volume threshold;
+
+DNN-based, where a trained deep neural network identifies flow types based on extracted runtime features;
+
+User input, where the application provides direct hints to classify communication flows.
+
+Each of these methods is described in detail in earlier sections of this work. Below is the table outlining the network configuration parameters used in the simulation.
+
+\begin{table}[h]
+\centering
+\caption{Network parameters for simulation of SHS}
+\label{tab:params}
+\vspace{1em}
+\begin{tabular}{ll}
+\toprule
+Parameter & Value \\
+\midrule
+Packet Size     & 8192 Bytes \\
+Switch Radix    & 32 \\
+Link Bandwidth  & 11.9 GB/s \\
+Eager Limit     & 64000 Bytes \\
+NIC Scheduler   & Round-robin \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+To mitigate the impact of various types of delay on our data, specifically in 
+the communication aspect of the experiment, we have configured the router 
+delay, network interface controller (NIC) delay, software delay, and remote 
+direct memory access (RDMA) delay to zero. This setup allows us to eliminate 
+any extraneous delay factors and isolate the effects of the communication 
+process on our data analysis.
+
