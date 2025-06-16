@@ -1,7 +1,7 @@
 \label{sec:hardwareparameters}
 \vspace{0.08in}
 \noindent{\bf Network topology:}
-In our experiments, the impact of the hardware design parameters are studied in the context of two 
+In this study's experiments, the impact of the hardware design parameters are studied in the context of two 
 widely used interconnect topologies: fat-tree and 1D dragonfly.
 %Both topologies are used in the current and future HPC systems. 
 
@@ -12,9 +12,9 @@ The topology has three important parameters \cite{Kim2008ISCA}:
 the number of compute nodes in each switch ($p$),
 the number of links in each switch that connect to other switches in the same group
 ($a$), the number of links in each switch that connect to other groups ($h$). A balanced dragonfly
-in general requires $a = 2p = 2h$. In our experiments, I set $p = h = 8$ and $a = 16$.
+in general requires $a = 2p = 2h$. In this study the parameters are set to $p = h = 8$ and $a = 16$.
 Each group has 16 switches and 128 compute nodes. 
-The global link connectivity between group follows the per-router arrangement
+The global link connectivity between groups follows the per-router arrangement
 %with parameters
 %(8,1,1) as specified in
 \cite{Alzaid2020ICS}.
@@ -28,7 +28,7 @@ The routing algorithm used is the progressive adaptive routing (PAR) \cite{Kim20
 {\em (2)~Fat-tree} -- The other topology is a 3-level full bisection bandwidth
 fat-tree.  In a 3-level full bisection bandwidth fat-tree, there are three types
 of switches: 1)~core switches which are at the top layer to connect pods,
-2)~aggregate switches, which connects the leaf switches and form a pod, and
+2)~aggregate switches, which connect the leaf switches and form a pod, and
 3)~the leaf switches, which are connected to the compute nodes. In a 3-level
 full bisection bandwidth fat-tree, the number of uplinks in the aggregate and
 leaf switches is the same as the number of downlinks. For our study, the 3-level
@@ -46,12 +46,12 @@ edge switches, and 256 compute nodes.
 
 \vspace{0.08in}
 \noindent{\bf Number of GPUs per node:}
-In our study, I vary the number of GPUs in each compute node from 1 to
+In this study, the number of GPUs in each compute node varies from 1 to
 8 to analyze the impact of the increased computation density and the reduction
 of network endpoints on the system performance. Each GPU is assigned
-to one MPI process; to simulate different number of GPUs
+to one MPI processes; to simulate different number of GPUs
 per node, multiple MPI process are assigned to a node.
-The GPUs inside a node are connected in an all-to-all connection topology resembling the intra node connectivity of Sierra system with NVlink.
+The GPUs inside a node are connected in an all-to-all connection topology resembling the intra node connectivity of the Sierra system with NVlink.
 The bandwidth between GPUs within a node
 is set to be twice the network link bandwidth, so that it replicates that of Sierra supercomputer.
 The default setting for GPUs per node is 1 GPU per node. This is the default

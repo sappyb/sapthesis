@@ -7,16 +7,16 @@ respect to 1 GPU/node configuration.}
 \end{figure*}
 
 
-We now present the results of simulation studies that vary
-different architectural parameters presented in
-Section~\ref{sec:hardwareparameters}.
+The results of simulation studies of various
+different architectural parameters which are preresented in
+Section~\ref{sec:hardwareparameters} are shown below.
 
-\subsection{Impact of the number of GPUs per node}
+\subsection{Impact of the Number of GPUs per Node}
 
 The number of GPUs per node determines the balance of computation 
 to communication capacity of a system and thus is an important configuration
-choice in GPU-based HPC clusters. We study
-the impact of this parameter on different types of HPC applications.
+choice in GPU-based HPC clusters.
+The impact of this parameter on different types of HPC applications is studied.
 
 Figure~\ref{fig:ftree_gpu} presents the relative performance of the applications
 running on fat-tree based systems with different number of GPUs per node.  The
@@ -33,7 +33,7 @@ resources. More GPUs per node does not imply more computing power for a given
 application and job size combination; it simply implies that the computing resources are
 available in a more condensed manner on fewer, more powerful nodes.
 
-In Figure~\ref{fig:ftree_gpu}, I see that for communication-heavy
+In Figure~\ref{fig:ftree_gpu}, it is observed that for communication-heavy
 applications (Stencil4d and Subcomm3d), as the number of GPUs per node
 increases, application performance drops for most job sizes. This is because
 as more GPUs are placed per node, the effective communication resources
@@ -57,19 +57,19 @@ connects to 16 nodes and each switch in 1D dragonfly connects to 8 nodes:
 there are chances for the 32-process and 64-process jobs to be mapped
 completely within one switch and achieve higher performance.  
 
-For the next two applications (Kripke and Laghos), I observe a noticeably
+For the next two applications (Kripke and Laghos), a noticeably
 different impact of changing the balance of communication to computation
-capability. In the case of Kripke, more GPUs per node do not impact its performance. This
+capability is observed. In the case of Kripke, more GPUs per node do not impact its performance. This
 is because the overall communication volume is low, and GPUs are often waiting
-on other GPUs to finish their computation. For Laghos, I observe a
-slowdown primarily with 8 GPUs per node. This indicates that having these many
+on other GPUs to finish their computation. For Laghos, a
+slowdown primarily with 8 GPUs per node is observed. This indicates that having these many
 GPUs per node shifts the communication-computation balance and also the performance 
 characteristics of the application.
 
-Finally, for the last two applications (AMG and SW4lite), I observe a gradual
-slow down when more GPUs are incorporated per node, on both network topologies. While this performance drop
+Finally, for the last two applications (AMG and SW4lite), a gradual
+slowdown when more GPUs are incorporated per node, on both network topologies is observed. While this performance drop
 is not as high as the communication-heavy applications, it is noticeable for the 4
-and 8 GPUs per node configurations.  We also find that for most
+and 8 GPUs per node configurations.  It is also found that for most
 applications that are sensitive to network performance, several factors
 including the communication pattern of the application, job mapping, and
 inter-job interference impact the execution time. For example, AMG and Laghos,
@@ -92,7 +92,7 @@ the performance.
 {\it \textbf{Overall Observation}:
 Most applications run slower with four or more GPUs per network endpoint.} 
 
-\noindent In our experiments, all but one application (Kripke, which is not
+\noindent In the experiments, all but one application (Kripke, which is not
 sensitive to network capabilities) slow down noticeably with four or more GPUs per network
 endpoint.
 Although part of the communication volume may be restricted to intra-node communication
@@ -127,41 +127,12 @@ loss due to the reduction of the node communication to computation ratio.
 %  \label{fig:dfly_gpu_comp}
 %\end{figure}
 
+\subsection{Impact of Network Bandwidth}
 
-%For applications where the communication is less intensive, the
-%number of GPUs per node affect the applications in different ways
-%depending on the intensity of the application. 
-%Figure~\ref{fig:mapping_comp_fcfs_ftree} shows the application
-%performance on fat-tree with the default setting (1x bandwidth,
-%FCFS scheduling), and different numbers of GPUs per node.
-%Figure~\ref{fig:mapping_comp_rr_dfly} shows the application
-%performance on Dragonfly with 1x bandwidth and round-robin scheduling, 
-%and different numbers of GPUs per node. As can be seen from the figures,
-%for the Kripke applications, the application execution time remains
-%the same for both setting when the number of GPUs increases from 1 to 8.
-%We attribute this to the application characteristic -- Kripke is dominated by
-%computation when with 8 GPUs per node. For Laghos however, the execution
-%time increases significantly when the number of GPUs increases from 1 to 8
-%on Dragonfly, and somewhat on fat-tree. This is because fat-tree has higher
-%aggregate throughput than Dragonfly. 
-%
-%******XXXXX SAP: remove the figures that have the same trend as the fat-tree
-%results place one plot on one figure like the fat-tree results. 
-%\begin{figure}[t]
-%%\begin{multicols}{3}
-%  \includegraphics[width=0.3\linewidth]{plots/dfly/map/dfly-x-mapping-comm.pdf}
-%  \includegraphics[width=0.3\linewidth]{plots/dfly/map/dfly-x-mapping-comp.pdf}
-%  \includegraphics[width=0.3\linewidth]{plots/dfly/map/dfly-x-mapping-comp-new.pdf}
-%%\end{multicols}
-%\caption{Application Performance on Dragonfly with default setting and different GPU's per node}
-%\end{figure}
-
-\subsection{Impact of network bandwidth}
-
-In the previous section, I saw that as the number of GPUs per node increases, 
+In the previous section, as the number of GPUs per node increases, 
 the default 1x network bandwidth becomes a performance bottleneck for many
-cases.  Thus, I next study the impact of varying network bandwidth along with number of
-GPUs/nodes on application performance. 
+cases is seen.  Thus, the impact of varying network bandwidth along with number of
+GPUs/nodes on application performance is studied next. 
 
 \begin{figure*}[t]
 \centering
@@ -179,8 +150,8 @@ GPUs/nodes on application performance.
   \label{fig:bw_dfly}
 \end{figure*}
 
-In our simulation experiments, I observed that the impact of network bandwidth on jobs of different sizes
-shares similar trends. Hence, I present data only for a job size of 128 processes.
+In the simulation experiments, it is observed that the impact of network bandwidth on jobs of different sizes
+shares similar trends. Hence, only the data for a job size of 128 processes is presented.
 Figure~\ref{fig:bw_ftree} shows the performance for the 4 GPUs per node
 configuration with varying network bandwidth relative to 1 GPU per node, 1x
 network bandwidth configuration on fat-tree network. We find that the network
@@ -224,18 +195,19 @@ SW4lite & 2x & 2x & 2x & 4x\\ \bottomrule
 }
 \end{table}
 
-Further, application requirement is also affected by the job size and the
+Further, application requirements are also affected by the job size and the
 placement with other jobs.  For example, 32-process Laghos ran slower in some
-workloads when mapped in the 8 GPUs per node configuration, which is why here I
-need double bandwidth to get more than 90\% speedup. We also see that sometimes
+workloads when mapped in the 8 GPUs per node configuration, which is why here
+double bandwidth is needed to get more than 90\% speedup. It is also seen that sometimes
 communication-intensive applications such as Stencil4d and Subcomm3d require
 less bandwidth in 8 GPUs per node configuration than 4 GPUs per node
 configuration to reach 90\% of the performance for 32 processes and 64 processes.  This
-is mainly due to the fact that, with a larger number GPUs per node, a significant
+is mainly due to the fact that, with a larger number of GPUs per node, a significant
+
 fraction of the communication happens within the same node.  This indicates that
-future GPU-based platforms must consider its workloads to decide important
+future GPU-based platforms must consider their workloads to decide important
 networking hardware parameters.  The results for 1D
-dragonfly, which has a similar trend as that in fat-tree. 
+dragonfly, show a similar trend as that in fat-tree. 
 
 
 \vspace{1em}
@@ -254,17 +226,17 @@ Our results show that
 
 
 
-\subsection{Impact of message scheduling in the NIC}
+\subsection{Impact of Message Scheduling in the NIC}
 
 The impact of message scheduling on system performance has not received
-sufficient attention in the community. To our knowledge, this is the first time
+sufficient attention in the community. To my knowledge, this is the first time
 that the impact of message scheduling on system and application performance
 is being studied systematically.
 %The results for application with different numbers of processes have a
 %similar trend.
 Similar to the impact of the number of GPUs per node and network link bandwidth, the impact
-of message scheduling is similar for both fat-tree and 1D dragonfly. Thus, I only discuss
-results for the 1D dragonfly in detail. 
+of message scheduling is similar for both fat-tree and 1D dragonfly. Thus,
+results for the 1D dragonfly are only discussed in detail. 
 
 %{\bf Sap: check all numbers in this section}
 \begin{figure}[t]
@@ -360,16 +332,16 @@ For most applications, some degree of round robin in NIC scheduling is effective
 Message scheduling can impact performance only when there are many concurrent
 communicating pairs. For the 1 GPU per node cases, it thus only affects the
 communication heavy applications such as Stencil4d, and has virtually no impact
-on the other applications in our study. As the number of GPUs per node
+on the other applications in the study. As the number of GPUs per node
 increases, so does the  number of communication sources and the number of
 concurrent communications. Thus, with 8 GPUs per node, message scheduling makes
 a difference in all applications, except Kripke.  The magnitude of the impact,
 however, depends on the application as well as the job size: Round-robin (RR) is
 the most effective scheduling in many cases.  However, each of the scheduling
-schemes that I use in our study achieves the best performance in some cases.
+schemes achieves the best performance in some cases.
 For example, FCFS is the best for AMG with 64 processes and 8 GPUs per node;
 RR-4 is slightly better than other scheduling policies for SW4lite with 512
-processes and 8 GPUs per node.  We conclude that the effectiveness of message
+processes and 8 GPUs per node.  The effectiveness of message
 scheduling depends on both application and the network parameters, and needs to
 be further studied by examining more applications as well as system
 configurations. 

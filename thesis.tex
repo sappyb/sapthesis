@@ -40,6 +40,13 @@
 %\usepackage{lmodern}
 \usepackage{amsmath}
 \usepackage{comment}
+\usepackage{float} 
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{listings}
+\usepackage{ctable}
+\usepackage{subfig}  % Or switch to subcaption
+
 %%% The mflogo package provides the METAFONT logo characters. Most
 %%% people won't need this (unless you're writing about METAFONT).
 
@@ -59,7 +66,6 @@
 \usepackage{csquotes}
 \usepackage[backend=biber]{biblatex}
 \addbibresource{myrefs.bib}
-
 %%% The 'biber' processor is assumed to be the backend by default,
 %%% so it does not need to be specified explicitly.
 %%%
@@ -123,7 +129,7 @@
 %%% '\usepackage[pdftex]{graphicx}' in your document directly.
 
 \ifpdf   % We execute this part (up to \else) if we are in PDF mode.
-  \usepackage[pdftex]{graphicx}
+  %\usepackage[pdftex]{graphicx}
   % We can create color text in our document using the color package.
   % We load it here so that we can tweak the default colors used in
   % the links created by hyperref, as the defaults are a bit too
@@ -140,7 +146,7 @@
   % of your thesis/dissertation, you should read more about this
   % extremely useful package.
   \usepackage[colorlinks=true,bookmarks=true,pdfborder={0 0 0},
-    linkcolor=myblue,urlcolor=myred,citecolor=mygreen,
+    linkcolor=myblue,urlcolor=black,citecolor=black,
     breaklinks=true,bookmarksnumbered=true]{hyperref}
 \else    % Otherwise we'll run this part if we are not in PDF mode.
   \usepackage[dvips]{graphicx}
@@ -200,8 +206,8 @@
 \department{Department of Computer Science}  %% Delete if no department
 \manuscripttype{Thesis}               %% [Thesis, Dissertation, Treatise]
 \degree{Doctor of Philosophy}            %% Name of the degree
-\degreeyear{2024}                     %% Graduation Year
-\defensedate{May 5, 2024}             %% Date of Defense
+\degreeyear{2025}                     %% Graduation Year
+\defensedate{July 3, 2025}             %% Date of Defense
 
 %%% The following options insert additional metadata into a PDF file if
 %%% you are using 'pdflatex' to process your document.  This information
@@ -227,7 +233,7 @@
 %%% is the professor's committee membership position.
 
 \committeeperson{Xin Yuan}{Professor Directing Thesis}
-\committeeperson{Fengfeng Ke}{University Representative}
+\committeeperson{Metcalfe}{University Representative}
 \committeeperson{Weikuan Yu}{Committee Member}
 \committeeperson{Gary Tyson}{Committee Member}
 \committeeperson{Abhinav Bhatele}{Committee Member}
@@ -250,6 +256,10 @@
 
 %%% The initial document setup is done.  Now we tell LaTeX that our
 %%% text will begin.
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\SetKwInput{KwInput}{Input}
+\SetKwInput{KwOutput}{Output}
 
 \begin{document}
 
@@ -350,6 +360,8 @@ $A_j$&The total interest paid out after $j$ payments
 %%% Now I use the abstract environment to create an abstract page.
 %%% The heading is created automatically.  The rest of the content
 %%% is up to you.
+
+
 \begin{abstract}
 \input{abstract}
 \end{abstract}
@@ -379,6 +391,7 @@ $A_j$&The total interest paid out after $j$ payments
 \input chapter2
 \input chapter3
 \input chapter4
+\input chapter5
 
 %%% Having finished the main text of my document, I will move on to
 %%% the appendices (or my one appendix, in this case).  An appendix
@@ -469,15 +482,9 @@ $A_j$&The total interest paid out after $j$ payments
 %%% heading and table of contents entry are automatically created by
 %%% using the biosketch environment.  The rest of the content is up to
 %%% you.  Remember not to include any personal contact info.
-\begin{comment}
 \begin{biosketch}
-The author was born, and then the author was ``educated,'' at least to
-some degree.  After finishing high school in Florida, the author
-completed a Bachelor of Arts degree at Florida State University.
-Following a decade in the work force in his discipline, the author
-returned to FSU to pursue graduate work.
+The author was born in India and earned a Master of Science degree in Computer Science from Jadavpur University in Kolkata. After working in the industry and completing a research internship at VMware, the author moved to the United States to pursue a Ph.D. in Computer Science at Florida State University. His research focuses on high-performance computing networks, software-defined networking, and performance modeling of parallel applications. During his doctoral studies, he has interned at Lawrence Livermore National Laboratory and contributed to the development of simulation frameworks used for evaluating HPC systems.
 \end{biosketch}
-\end{comment}
 
 %%% Here endeth the document.  LaTeX will ignore anything that follows
 %%% the \end{document} command.

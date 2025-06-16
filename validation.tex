@@ -1,5 +1,3 @@
-%Before I analyze and learn from my simulation results, I will first present 
-%my validation of the TraceR-CODES framework.
 
 TraceR-CODES has been previously validated with micro-benchmarks and stand alone
 applications including pF3D, 3D Stencil, ping-pong, all-to-all,
@@ -13,7 +11,7 @@ collected and projections were done for the same system.
 
 To gain confidence in TraceR-CODES' prediction for cross-platform and
 cross-network multi-job workloads as well
-as in my new additions to TraceR-CODES, I validate TraceR-CODES with three random
+as in the new additions to TraceR-CODES, this work validates TraceR-CODES with three random
 multi-job workloads.
 The validation is done by 1)~randomly creating three workloads that consist of 
 representative HPC benchmarks with different communication and computation
@@ -24,16 +22,15 @@ times from the simulations with the measured times on Quartz.
 
 The three workloads are formed by selecting jobs from two communication intensive
 benchmarks (Stencil4d and Subcomm3d) and two computation intensive applications
-(Kripke and Laghos). More information about the fmy applications is given in
-Section V.A. 
+(Kripke and Laghos). 
 
-We ran the three workloads in a dedicated access time (DAT) on Quartz at LLNL, during which period
-no other jobs ran on the machine. We used linear mapping of job
+In this study, three workloads were run in a dedicated access time (DAT) on Quartz at LLNL, during this period
+no other jobs ran on the machine. It used linear mapping of job
 ranks to nodes and measured the execution time of each job in the workloads.
-For simulation with the TraceR-CODES framework, I use the
-exact system settings as Quartz: (1) I create
+For simulation with the TraceR-CODES framework, it used the
+exact system settings as Quartz: (1)  create
 the exact fat-tree topology as Quartz using the arbitrary graph model; (2)
-I set the values of the network parameters to the corresponding values on Quartz:
+ set the values of the network parameters to the corresponding values on Quartz:
 11.9 GB/s peak link bandwidth, 8 packets buffer size, 4096 bytes packet size,
 and so on; and (3) the jobs and processes in each workload
 are mapped to compute nodes exactly in the same
@@ -41,10 +38,10 @@ way as they ran on Quartz.
 
 The traces for driving the simulation were collected on
 Vulcan~\cite{vulcan}, a 5D-torus based Blue Gene/Q
-system.  Since, the computational capabilities of Vulcan are different from
-Quartz, I measure the relative compute scaling factor betIen Vulcan and
-Quartz, and scale the computation regions of simulations accordingly. This
-set up helps us evaluate the projections when the network (5D-torus vs fat-tree)
+system.  Since the computational capabilities of Vulcan are different from
+Quartz, the relative compute scaling factor between Vulcan and
+Quartz is calculated, and the computation regions of simulations were scaled accordingly. This
+setup helps to evaluate the projections when the network (5D-torus vs fat-tree)
 as well as computational capability (IBM PowerPC vs Intel Xeon) of the traced
 system are different from the target system.
 %Finally, I use the exact job and node mapping in the simulation as the real
@@ -72,17 +69,17 @@ each pod, which are connected to 16 aggregate switches using one physical link
 each. We give these details of the Quartz topology to highlight that
 Quartz' fat-tree is different from the standard, symmetric fat-tree topology,
 as are the networks in most production systems. These differences are the main driver
-for my development of the {\em arbitrary graph model}. 
+for the development of the {\em arbitrary graph model}. 
 
-Figure~\ref{fig:validation} shows the results of the validation. On the
-horizontal axis, I have each application and their corresponding job size used
+Figure~\ref{fig:validation} shows the results of the validation. The
+horizontal axis, have each application and their corresponding job size used
 in various workloads. Each blue dot represents the average 
 of the error percentage between the predicted runtime and the measured runtime
 for various
 instances of the given application-job size pair that appear across the three workloads. For
 example, since Subcomm3d jobs with a process count of 128 appears two times
-across the three workloads, I compute their average error percentage to be
--7.88\% and present it here. We can see that for all cases except 32-ranks
+across the three workloads, their average error percentage is computed to be
+-7.88\%. It can be observed, that for all cases except 32-ranks
 Stencil4d, the prediction error is within 20\%; and for all except 3 cases
 (32-rank Stencil4d, 32-ranks Kripke, and 64-ranks Kripke), the error is within 15\%.
 These results suggest that TraceR-CODES predictions reasonably approximate 
