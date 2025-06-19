@@ -32,19 +32,18 @@ resources for communications in the previous phase can be released; as
 soon as one process enters a communication phase, the application enters
 the communication phase. 
 
-\begin{figure}[hbtp]
-\begin{lstlisting}[breaklines]
-//Communication Phase Start
-MPI_Allreduce(&loc_norm, &tot_norm, 1, MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
-.... 
-MPI_Barrier(pmesh->GetComm());
-....
-//Computation Phase Start
-if (visualization || visit || gfprint) { oper.ComputeDensity(rho_gf); }
-....
+\begin{figure}[H]
+\begin{lstlisting}[breaklines, language=C++, frame=single, tabsize=4, basicstyle=\ttfamily]
+LagrangianHydroOperator (...){
+        ...
+        ParMesh *pm = H1FESpace.GetParMesh();
+        MPI_Allreduce(&loc_area, &glob_area, 1, MPI_DOUBLE, MPI_SUM, pm->GetComm
+());
+        ...
+}
 \end{lstlisting}
-\caption{Laghos Code snippet with Phases}
-\label{code.laghos.1} 
+\caption{Laghos code snippet}
+\label{code.laghos.1}
 \end{figure}
 
 \begin{comment}
