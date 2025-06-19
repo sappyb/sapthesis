@@ -1,8 +1,8 @@
-To evaluate the effectiveness of SDN-based routing strategies under varying communication patterns, I select a set of communication-intensive applications. These applications have been described in detail in Chapter 2, including their computation and communication characteristics, as well as their relevance to realistic HPC workloads.
-
-In this study, I use six representative applications: \texttt{Random-Permutation}, \texttt{Shift}, \texttt{Stencil3d}, \texttt{Stencil4d}, \texttt{Milc}, and \texttt{Nekbone}. These applications exhibit diverse communication behaviors—ranging from synthetic near-neighbor patterns to production-level scientific codes—and serve as appropriate test cases to assess how well SDN techniques manage different types of network traffic.
-
-To further investigate the impact of phase-driven communication behavior, I also design two synthetic mixed-traffic applications:
+Eight representative applications are used in the study:
+\texttt{Random-Permutation}, \texttt{Shift}, \texttt{Stencil3d}, \texttt{Stencil4d}, \texttt{Milc}, and \texttt{Nekbone}, \texttt{Random-Permutation-Mixed},
+and \texttt{Stencil-Mixed}. All of the applications except \texttt{Random-Permutation-Mixed} and \texttt{Stencil-Mixed} including 
+their computation and communication characteristics have been described
+in detail in Chapter 2.
 
 \begin{itemize}
 \item \textbf{Random-Permutation-Mixed}: This pattern alternates between two distinct random-permutation communication phases, separated by a computation phase. Each communication phase uses a different source-destination mapping, introducing dynamic changes in the communication structure.
@@ -10,4 +10,13 @@ To further investigate the impact of phase-driven communication behavior, I also
 \item \textbf{Stencil-Mixed}: This application combines a \texttt{Stencil3d} phase followed by a \texttt{Stencil4d} phase, with an intermediate computation phase. The transition between patterns allows evaluation of the routing system’s responsiveness to changes in spatial communication demands.
 \end{itemize}
 
-To ensure accurate analysis of communication transitions, I enforce explicit synchronization barriers between phases. This guarantees that each communication phase is fully completed before the next begins, preventing overlap and allowing isolated assessment of routing behavior across phases.
+All of these applications are communication-intensive, but 
+they exhibit diverse communication behaviors ranging from synthetic
+near-neighbor patterns to production-level scientific codes
+and serve as appropriate test cases to assess how well SDN techniques
+manage different types of network traffic.
+
+To ensure accurate analysis of communication transitions, I enforce
+explicit synchronization barriers between phases. This guarantees
+that each communication phase is fully completed before the next begins,
+preventing overlap and allowing isolated assessment of routing behavior across phases.

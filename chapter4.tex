@@ -1,28 +1,93 @@
 \chapter{Design and Evaluation of Techniques for HPC platforms with SDN-capable Interconnects} 
-In this work, I explore the integration of software-defined networking (SDN) into high performance computing (HPC) systems, with a focus on adapting SDN mechanisms to the distinct communication characteristics of HPC applications.
 
-This investigation is motivated by the widespread success of SDN in domains such as data centers, campus networks, and wide-area networks, where it has demonstrated significant improvements in traffic management and network resource optimization through features like logically centralized control, per-flow management, and programmability. Prior studies, including those by Kreutz et al.\ and He et al., have shown how SDN can optimize Internet and data-parallel workloads through dynamic reconfiguration and intelligent traffic steering.
+Software-defined networking (SDN)~\cite{kreutz2014software} has shown great
+promise and has been widely deployed in data centers, campus networks,
+and wide-area networks. SDN has the ability to manage traffic at the flow
+level using the logically centralized global network view and to optimize
+the network resource utilization for global optimality, which may
+significantly improve network performance over the traditional networking
+infrastructure~\cite{tr2016sdn}.
 
-These efforts, while impactful, primarily target Internet and data-parallel applications characterized by coarse-grained, irregular traffic patterns, and fall short in addressing the repetitive communication phases inherent to HPC workloads. As a result, conventional SDN techniques, when applied to HPC systems, often incur prohibitive overheads due to their inability to react efficiently to short-duration, phase-driven communication behavior. Consequently, SDN remains underutilized in HPC environments, highlighting the need for novel techniques that can effectively leverage the static and predictable nature of many HPC communication patterns.
+Although SDN features are also attractive to high performance
+computing (HPC) systems and applications, SDN has yet to be widely adopted
+in the HPC domain. Existing SDN techniques optimize for Internet
+and data-parallel applications (e.g. Hadoop and map-reduce
+applications)~\cite{he2016firebird}. The communication characteristics of
+HPC applications are different from those of Internet and data-parallel
+applications. For example, many HPC applications simulate
+physical processes over numerous time steps,
+with each time step performing similar tasks: the execution of
+such applications exhibits phased behavior with alternating computation
+and communication phases. During the computation phases, few communications
+are performed; and the communications often repeat themselves in
+different time steps. Additionally,
+communications in HPC applications are often static in that they are known
+to the application developers or can be analyzed statically or dynamically
+~\cite{faraj2002communication,hong2013achieving}. Exploring such features
+in HPC applications and systems will allow SDN to support
+communications more effectively and to perform its tasks more efficiently.
 
-To address the challenges of applying SDN in HPC environments, I introduce techniques that leverage the communication behavior exhibited by HPC applications, specifically focusing on flow identification and communication phase identification. A large number of HPC applications simulate physical processes over numerous time steps, with each time step performing similar tasks that alternate between computation and communication phases. These communication phases often repeat and, in many applications, occur at durations in the order of subseconds or even submilliseconds, making conventional SDN techniques unsuitable due to the overheads incurred when reacting to such fine-grain behavior. However, because these communication patterns are often static and either known to application developers or can be analyzed statically or dynamically, they present an opportunity for SDN systems to optimize their operation. I propose flow identification to accurately classify application flows, with particular focus on elephant flows---those that carry large amounts of data and typically dominate the communication time. Identifying and efficiently scheduling these elephant flows helps address the problem of unbalanced network traffic in HPC applications. Additionally, I distinguish between static and dynamic communications, using application-provided hints through an API to guide flow classification for static patterns, and employing a machine learning--based approach to support flow identification in dynamic cases.
+In this work, we develop techniques to adapt SDN to HPC workloads and systems,
+taking HPC application characteristics into account. The techniques
+include flow identification, phase identification, and flow scheduling.
+Flow identification identifies the types of flows
+in applications, which is essential
+for  an SDN-capable network to achieve high performance.
+Phase identification identifies communication phases in applications, which
+allows network resources to be utilized more effectively. Flow scheduling
+schedules the communication to achieve target optimization objectives.
+To maximize the effectiveness, our techniques treat
+static and dynamic communications in HPC applications differently.
+Dynamic communications are handled using techniques similar to those
+in the traditional SDN networks. For static communications, we propose
+to enhance SDN with an API for HPC applications
+to give hints to the SDN system (e.g. whether a flow is an elephant flow
+or will likely be an elephant flow). For such communications,
+the network system relies on the upper layer to obtain communication
+information. This is similar to the intent-based API \cite{Coflow2012}
+where application developer and the network system work
+together for flow and phase identification.
 
-To evaluate the effectiveness of the proposed techniques, I conduct extensive simulation experiments using the TraceR-CODES parallel discrete-event simulator on a 3-level Fat-tree topology. These simulations include both static and dynamic communication benchmarks to assess the applicability of the approach across a range of HPC workloads. For static applications such as Stencil4d, which involve near-neighbor communication patterns, the techniques I present result in notable performance improvements. For dynamic applications such as Milc, where different communication patterns are exercised across iterations, the integration of application-level hints and machine learning--based flow identification demonstrates consistent advantages over existing SDN schemes. The evaluation across all three Fat-tree topologies confirms that incorporating communication-aware strategies into the SDN framework improves performance for both predictable and unpredictable communication behaviors. These results highlight the importance of aligning SDN control mechanisms with the underlying structure of HPC communication, particularly in systems where efficient flow management directly influences application scalability.
+We conducted extensive simulation experiments using the
+TraceR-CODES
+\cite{jain2016evaluating,mubarak2016enabling,jain2017predicting}
+PDES ~\cite{fujimoto1990parallel} simulator on a 3-level
+Fat-tree topology ~\cite{leiserson1985fat} ~\cite{al2008scalable}. Our
+simulation results reveal that our techniques improve the performance
+over the existing SDN
+scheme for applications with both static and dynamic communications.
+%For example, for the static Stencil4d benchmark with the near neighbor
+%communications, our technique improves the performance by around XXXXXX\%.
+%For the dynamic Milc benchmark where multiple patterns are
+%performed in different iterations, our technique improves over
+%existing SDN scheme by XXXXXX\% on average across all three
+%fat-tree topologies.
+The main contributions of this work include the following:
+%
+\begin{itemize}
+\item We identify the features in HPC applications that can be used
+  to enhance the effectiveness of SDN.
+\item We develop techniques to adapt SDN to HPC applications and
+  systems by exploiting the identified HPC features.
+\item We perform extensive simulation to evaluate and validate
+  the proposed techniques.
+\end{itemize}
 
-In summary, I contribute to the ongoing effort of adapting software-defined networking to the unique requirements of high performance computing systems by exploiting the repetitive and predictable communication behaviors of HPC applications. By bridging the gap between general-purpose SDN architectures and the fine-grained, phase-driven communication patterns common in scientific computing, I offer a communication-aware control strategy that enhances flow management in HPC networks. These contributions demonstrate that combining static flow information with dynamic identification mechanisms enables SDN to support both regular and irregular communication patterns, ultimately improving performance in realistic HPC workloads and guiding future directions in adaptive network control.
 
-
-\section{Flow Classification in HPC Applications}
+\section{Flow Identification in HPC Environments}
+\label{sec:flow_identification}
 \input{flow_classification}
 \section{Phase Identification}
+\label{sec:phase_identification}
 \input{phase_identification}
 \section{SDN routing}
+\label{sec:sdn_routing}
 \input{sdn_routing}
-\section{Experimental Setup}
+\section{Performance Evaluation}
 \input{exp_setup}
-\section{Application and Workloads}
+\subsection{Application and Workloads}
 \input{app_workload}
-\section{Performance Study}
+%\section{Performance Study}
 \input{performance}
 \section{Summary}
 \input{summary}

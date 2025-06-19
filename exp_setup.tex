@@ -1,28 +1,53 @@
-I perform extensive experiments using the TraceR-CODES simulator~\cite{jain2016evaluating,mubarak2016enabling}, which I have extended to support the study of the SDN techniques discussed in this work. TraceR-CODES is a software tool suite used for performance analysis of parallel and distributed applications, and it is specifically designed to simulate large-scale scientific applications running on high-performance computing systems.
+The proposed techniques have been extensively studied using
+the TraceR-CODES simulator~\cite{jain2016evaluating,mubarak2016enabling}.
+TraceR-CODES is a software tool suite used for
+performance analysis of parallel and distributed applications, and it
+is specifically designed to simulate large-scale scientific applications
+running on high-performance computing systems. In the following, I will first
+discuss the experimental setup and the extensions that are added to
+TraceR-CODES to support the evaluation. After that, the performance results
+will be presented.
 
-To support my experiments, I have integrated the trained DNN model into the simulator using Google TensorFlow's C APIs. To ensure compatibility with the TensorFlow libraries, I carefully selected the MPI and GNU compiler standards. In particular, I utilized MVAPICH 2 as the MPI implementation and adopted C++14 from GNU version 9.0.1 as the compiler standard.
+\subsection{Experimental Setup}
 
-By leveraging real-time network statistics, my DNN model dynamically predicts network flows during the simulation runtime. This capability not only enhances prediction accuracy but also enables real-time data processing, making the model both robust and efficient.
+The experiments are performed on two distinct Fat-tree configurations:
+a 1024-node full-bisection Fat-tree and a 1536-node tapered Fat-tree
+with a 3:1 oversubscription ratio. In both configurations, each switch
+is equipped with 32 ports, and each leaf switch connects to 16 compute
+nodes. Importantly, all 32 ports of the core and aggregate switches are
+fully utilized, connecting exclusively to other switches to preserve the
+hierarchical structure of the topology.
 
-In addition to evaluating SDN-based routing, I also investigate the impact of hardware design characteristics on performance using the Fat-tree connection topology. The Fat-tree topology is a well-established interconnect architecture commonly employed in HPC systems and data centers. I conduct simulations on two distinct Fat-tree configurations: a 1024-node full-bisection Fat-tree and a 1536-node tapered Fat-tree with a 3:1 oversubscription ratio. In both configurations, each switch is equipped with 32 ports, and each leaf switch connects to 16 compute nodes. Importantly, all 32 ports of the core and aggregate switches are fully utilized, connecting exclusively to other switches to preserve the hierarchical structure of the topology.
+The proposed SDN techniques for HPC environments including flow
+identification, phase identification, and SDN routing are added to
+TraceR-CODES. Flow identification schemes with and without user input
+described in Section~\ref{sec:flow_identification}, including the
+threshold-based scheme, the DNN-based scheme, user-input based scheme
+are incorporated in TraceR-CODES. 
+To support the machine learning based flow identification scheme,
+a trained DNN model has been integrated
+into TraceR-CODES using Google TensorFlow's C APIs. To ensure
+compatibility with the TensorFlow libraries, I utilized
+MVAPICH 2 as the MPI implementation and adopted C++14 from GNU
+version 9.0.1 as the compiler standard. The DNN model is able to 
+process real-time network statistics and  
+dynamically predicts network flows during the simulation runtime.
+The user-input based scheme is supported by marking each MPI call with
+user hints. 
+%This capability not only enhances prediction accuracy but also enables
+%real-time data processing, making the model both robust and efficient.
 
-In this study, I explore three types of SDN routing mechanisms:
+%In addition to evaluate SDN-based routing, I also investigate the impact of hardware design characteristics on performance using the Fat-tree connection topology. The Fat-tree topology is a well-established interconnect architecture commonly employed in HPC systems and data centers.
 
-SDN-greedy, which allocates paths by minimizing congestion in real time using simple heuristics;
-
-SDN-optimal, which computes globally least-congested paths by evaluating all possible routes;
-
-SDN-adaptive, which dynamically adjusts routing decisions based on the current traffic patterns and flow types.
-
-For flow classification, I employ three distinct strategies:
-
-Threshold-based, where flows are classified as elephant or mice based on a predefined data volume threshold;
-
-DNN-based, where a trained deep neural network identifies flow types based on extracted runtime features;
-
-User input, where the application provides direct hints to classify communication flows.
-
-Each of these methods is described in detail in earlier sections of this work. Below is the table outlining the network configuration parameters used in the simulation.
+The functionality to support phase identification with and without user
+information is added to the simulator and the simulator can be configured
+to use a particular phase identification scheme. For routing, 
+three types of SDN routing mechanisms are added: 
+{\em SDN-greedy} that allocates paths by minimizing congestion in real time using simple heuristics, 
+{\em SDN-optimal} that computes globally least-congested paths by evaluating all possible routes, and {\em SDN-adaptive} that dynamically adjusts
+routing decisions based on the current traffic patterns and flow types.
+Each of these methods is described in detail in earlier. Below is the
+table outlining the network configuration parameters used in the simulation.
 
 \begin{table}[h]
 \centering
@@ -41,8 +66,6 @@ NIC Scheduler   & Round-robin \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-
 
 To mitigate the impact of various types of delay on our data, specifically in 
 the communication aspect of the experiment, we have configured the router 

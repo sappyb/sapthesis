@@ -1,4 +1,74 @@
-Flow information used to
+
+HPC applications exhibit phased behavior with alternating
+computation and communication phases. Since communications in different
+phases do not overlap, network resources such as communication channels
+allocated to communications in one phase can be reused for communications
+in another phase. Hence, identifying communication phases, which is unique
+in the HPC environment, allows the SDN to manage resources more effectively.
+
+\subsection{Phase identification with user hints}
+
+Communication phases in an HPC application can be easily identified
+inside a program: there are often a section of code corresponding
+for the communications in the program. Figure~\ref{code.laghos.1}
+shows the code snippet for Laghos with communication phase marked. 
+Here, after initiating MPI Allreduce
+communications, the node performs MPI Barrier to make sure all ranks 
+have the data, before initiating the computation phase where
+it calculates the density.
+Now, the communication pattern may be different in the two
+communication phases in the given code as the comm world is calculated
+at runtime. Being able to reuse network resources in different phases will
+significantly improve network resource utilization. 
+We propose to have an API for HPC application to give
+information about phases. With the API, the user can insert a marker before
+and after each communication
+phase in the program to inform the network the starting and
+ending of a communication phase. With the assistance from the user,
+the SDN network can detect communication phases in an HPC application
+without minor overheads: once all processes for an application
+enter a computation phase, the application is in the computation phase and
+resources for communications in the previous phase can be released; as
+soon as one process enters a communication phase, the application enters
+the communication phase. 
+
+\begin{figure}[hbtp]
+\begin{lstlisting}[breaklines]
+//Communication Phase Start
+MPI_Allreduce(&loc_norm, &tot_norm, 1, MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+.... 
+MPI_Barrier(pmesh->GetComm());
+....
+//Computation Phase Start
+if (visualization || visit || gfprint) { oper.ComputeDensity(rho_gf); }
+....
+\end{lstlisting}
+\caption{Laghos Code snippet with Phases}
+\label{code.laghos.1} 
+\end{figure}
+
+\begin{comment}
+Communications in different phases do not happen at the same time. As such, network
+resources (such as communication channels) can be allocated
+independently in different phases.
+Hence, accurately identifying communication phases can improve
+the SDN support for HPC applications. Traditionally SDN schemes such
+as the Hedera's threshold-based scheme automatically detect communication
+changes when the flow statistics are collected and processed. However,
+the granularity of such detection is the same as that for flow statistics
+collection and processing, and network reconfiguration,
+which is in the order in seconds. Such a coarse granularity is ineffective
+for tightly coupled HPC applications whose phases can change in
+subseconds or even submilliseconds. 
+\end{comment}
+
+%In this section we will talk about the phases of 
+%HPC application and how to detect them during application runtime.
+
+\subsection{Dynamic communication phase identification}
+
+\begin{comment}
+ Flow information used to
 classify elephant flows in current phase should ignore the flow information for the flows in the
 previous phase as these two set of flows  don't occur together.
 In order to
@@ -8,44 +78,42 @@ sent above a certain threshold. If it is, then the network is in a
 communication phase; otherwise, it is mostly in a computation phase.
 If the
 network transitions from a computation phase to a communication phase or vice versa during
-probing, previous flow informations are disregarded, and the flow
+probing, previous flow paths for elephant flows are disregarded, and the flow
 informations for each flow in the current phase is considered for
 prediction. 
+\end{comment}
 
-Without user input, communication phases in HPC applications can be
-identified using the algorithm described in Algorithm~\ref{alg:phase_detection}.
-The phase detection algorithim takes the polling interval, threshold for communication
-and number of sub intervals within a polling interval as input. The phase detection 
-keeps on happening at every X/r intervals for the entire application run. 
-The output of the algorithm is the current phase of the application. Initially, the
-algorithm starts in computation phase. At every X/r interval of time, the data sent by all leaf
-switches in the network are collected. This data when aggregated together represents the total communication data
-inside the network in that respective interval. The algorithm then checks if this aggregated data is more than the 
-threshold for considering the network to be in communication phase. If the aggregated data is more than the 
-threshold and the previous phase is a computation phase then there is transition and the current phase become communication.
-In case, the previous phase is communication phase then there is no tranistion and the application continues to be in communication phase.
-Whenever there is a change of 
-phase, the flow informations for the flows in previous phase is ignored.
+Without the hints from application, communication phases in an HPC
+application can be detected by finding the computation period in the
+application when very few communications are performed. 
+Our dynamic communication phase identification algorithm
+is shown in Figure~\ref{alg:phase_detection}. We first decide the interval
+value for a minimal computation phase (e.g. 100ms). The phase detection
+algorithm is executed periodically at the interval boundary to determine
+whether phase is a communication phase or a computation phase depending
+whether the total data communicated in the application during the phase
+passes a threshold value. If a current phase is a computation phase and
+the previous phase is a communication phase, network resources allocated
+for the application in previous phases are released. 
+
 
 \begin{algorithm}
 \DontPrintSemicolon
 
-\caption{Phase identification algorithm}
+\caption{Dynamic phase identification algorithm}
 \label{alg:phase_detection}
 
-\KwInput{Threshold $p$, Polling interval $X$, Number of sub intervals $r$}
-\KwOutput{Current phase $Current\_phase$}
+Let total\_data be all data sent by the application in the current interval\;
+    \If{($Data\_sent > threshold$)}{
+        current phase is a communication phase\;
+    }
+    \Else{
+      current phase is a computation phase\;
+      \If {(the previous phase is a communication phase)} {
+        release resouces allocated in previous phases
+        }
+    }
 
-$Previous\_phase \gets$ computation\;
-%$flow\_data \gets$ data for all flows\;
-\For{each interval of $X/r$}{
-    $Data\_sent \gets$ data sent by all leaf switches\;
-    \If{($Data\_sent > p$) and ($Previous\_phase$ == computation)}{
-        $Current\_phase \gets$ communication\;
-    }
-    \ElseIf{($Data\_sent < p$) and ($Previous\_phase$ == communication)}{
-        $Current\_phase \gets$ computation\;
-    }
-    $Previous\_phase \gets Current\_phase$\;
-}
 \end{algorithm}
+
+
