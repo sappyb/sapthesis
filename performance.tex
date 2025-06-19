@@ -2,7 +2,7 @@ The result of various SDN techniques which are used in HPC is presented here
 
 \subsection{Evaluation of flow classification techniques}
 
-In this section, we compare the impact of different flow identification techniques on the SDN algorithm for various applications under full bisection fat-tree and 3-to-1 tapered fat-tree configurations. The evaluation includes performance metrics across application communication time for different applications.
+In this section, we compare the impact of different flow identification techniques on the SDN algorithm for various applications under full bisection fat-tree and 3-to-1 tapered fat-tree configurations. The evaluation includes performance metrics across application communication time for different applications. To evaluate the flow detection technique, we kept the routing fixed as SDN‑optimal and used communication‑computation phase detection, while varying the flow detection methods.
 
 \subsubsection{Performance Under Full Fat-Tree}
 \begin{figure}[h]
@@ -12,7 +12,7 @@ In this section, we compare the impact of different flow identification techniqu
   \label{fig:fld_full}
 \end{figure}
 
-The figure ~\ref{fig:fld_full} compares communication speedup achieved by three flow detection techniques—SDN User, SDN DNN, and SDN Threshold—across various applications, including Random-Permutation, Random-mixed Shift, Stencil3D, Stencil4D, Stencil-mixed, Milc, and Nekbone. These applications represent diverse traffic patterns, ranging from simple to highly complex workloads, making them ideal benchmarks for evaluating network performance.  A higher bar (speedup) signifies better efficiency and lower communication time relative to the baseline. The user flow identification technique performs best due to early flow identification, enabling prompt traffic management. DNN detection ranks second, limited by a 0.3-millisecond delay. Threshold detection performs worst due to delayed flow recognition. Importantly, all three techniques perform better than the widely used single-path static routing, demonstrating the effectiveness of dynamic flow detection in improving communication efficiency within SDN frameworks. User detection consistently leads across all applications. DNN detection shows reasonable gains despite initial delay. Threshold detection offers minimal improvement. These results highlight the importance of incorporating flow detection mechanisms to enhance SDN routing performance beyond conventional static routing methods like D-mod-K, also, the DNN model does a faster flow classification compared to threshold based model without losing in performance.
+The figure ~\ref{fig:fld_full} compares communication speedup achieved by three flow detection techniques, SDN User, SDN DNN, and SDN Threshold across various applications, including Random-Permutation, Random-mixed Shift, Stencil3D, Stencil4D, Stencil-mixed, Milc, and Nekbone. These applications represent diverse traffic patterns, ranging from simple to highly complex workloads, making them ideal benchmarks for evaluating network performance.  A higher bar (speedup) signifies better efficiency and lower communication time relative to the baseline. The user flow identification technique performs best due to early flow identification, enabling prompt traffic management. DNN detection ranks second, limited by a 0.3-millisecond delay. Threshold detection performs worst due to delayed flow recognition. Importantly, all three techniques perform better than the widely used single-path static routing, demonstrating the effectiveness of dynamic flow detection in improving communication efficiency within SDN frameworks. User detection consistently leads across all applications. DNN detection shows reasonable gains despite initial delay. Threshold detection offers minimal improvement. These results highlight the importance of incorporating flow detection mechanisms to enhance SDN routing performance beyond conventional static routing methods like D-mod-K, also, the DNN model does a faster flow classification compared to threshold based model without losing in performance.
 
 
 \begin{comment}
@@ -71,7 +71,7 @@ In tapered, the aggregate switch ports have a lot of load, and in all cases, SDN
 \end{comment}
 
 \subsection{Evaluation of Phase Identification}
-This section evaluates the effectiveness of phase identification, across varioous applications under full bisection fat-tree and 3-to-1 tapered fat-tree configurations.
+This section evaluates the effectiveness of phase identification, across varioous applications under full bisection fat-tree and 3-to-1 tapered fat-tree configurations. To evaluate the communication‑computation phase identification technique, we kept the routing fixed as SDN‑optimal and used the SDN user flow detection method, while varying the phase identification methods.
 
 \subsubsection{Performance Under Full Fat-Tree}
 
@@ -99,7 +99,7 @@ The figure~\ref{fig:phase_taper} shows phase identification results for full Fat
 In Tapered Fat-Tree routing, phase-based optimization dynamically adjusts traffic injection rates using threshold-based flow classification and SDN routing to further enhance communication efficiency. The analysis of communication speedup shows notable improvements in random-mixed, stencil-mixed, and nekbone, with random-mixed achieving an 11.13\% increase in performance, surpassing the gains observed in Full Fat-Tree routing. The phase identification mechanism efficiently detects phase transitions and dynamically manages traffic flow to reduce network congestion
 
 \subsection{Evaluation of SDN-based Routing}
-This section evaluates the effectiveness of SDN-based routing approaches across various applications under full bisection fat-tree and 3-to-1 tapered fat-tree configurations of user identification of flows. We analyze performance in terms of communication time.
+This section evaluates the effectiveness of SDN-based routing approaches across various applications under full bisection fat-tree and 3-to-1 tapered fat-tree configurations of user identification of flows. We analyze performance in terms of communication times.To evaluate the various SDN routing techniques, we kept the communication‑computation phase identification fixed and used the SDN user flow detection method, while varying the SDN routing methods.
 
 \subsubsection{Performance Under Full Fat-Tree}
 The figure ~\ref{fig:routing_full} illustrates the communication speedup achieved by three routing techniques—Adaptive, SDN User, and SDN-Adaptive across various applications under a full fat-tree topology. The y-axis represents the speedup relative to static D-mod-K routing, where higher bars indicate better performance.

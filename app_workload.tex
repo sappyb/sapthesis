@@ -16,6 +16,8 @@ near-neighbor patterns to production-level scientific codes
 and serve as appropriate test cases to assess how well SDN techniques
 manage different types of network traffic.
 
+For the tapered fat-tree, we also use a application called \textbf{Random-permutation-third}, we use this application, because in 3-to-1 tapered fat-tree there are a 3 flows which contends for one uplink. To have a complete no contention scenerio, we used this traffic pattern where we only selected one third of the flows present in a random-permuatation traffic.
+
 To ensure accurate analysis of communication transitions, I enforce
 explicit synchronization barriers between phases. This guarantees
 that each communication phase is fully completed before the next begins,
