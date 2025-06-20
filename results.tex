@@ -1,11 +1,3 @@
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{plots/dfly/map/dfly-mapping-all.eps}
-\caption{Speedup on 1D dragonfly for various numbers of GPUs per node settings with
-respect to 1 GPU/node configuration.}
-\label{fig:dfly_gpu}
-\end{figure*}
-
 
 The results of simulation studies of various
 different architectural parameters which are preresented in
@@ -103,29 +95,26 @@ loss due to the reduction of the node communication to computation ratio.
 %communication, as well as applications that are placed adjacent to communication
 %intensive applications in a workload, will suffer performance degradation.  
 
+\FloatBarrier
+\begin{figure*}[h] 
+\centering
+\includegraphics[width=\textwidth]{plots/ftree/map/ftree-mapping-all.eps}
+\caption{Speedup on fat-tree for various numbers of GPUs per node settings with
+respect to 1 GPU/node configuration.}
+\label{fig:ftree_gpu}
+\end{figure*}
+\FloatBarrier
 
-%\begin{figure}[h] \begin{multicols}{3} \vspace{-0.6in}
+\FloatBarrier
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{plots/dfly/map/dfly-mapping-all.eps}
+\caption{Speedup on 1D dragonfly for various numbers of GPUs per node settings with
+respect to 1 GPU/node configuration.}
+\label{fig:dfly_gpu}
+\end{figure*}
+\FloatBarrier
 
-%    \includegraphics[width=0.8\linewidth]{plots/dfly/map/dfly-x-mapping-comm.pdf}
-     % \vspace{-1in}
-
-%  \caption{Performance of communication intensive kernels
-%    on 1D dragonfly with default setting and different numbers of
-%    GPU's per node}
-%  \label{fig:dfly_gpu_comm}
-%\end{figure}
-
-%\begin{figure}[h]
-    %\vspace{-0.6in}
-
-%    \includegraphics[width=0.8\linewidth]{plots/dfly/map/dfly-x-mapping-comp.pdf}
-     % \vspace{-1in}
-
-%  \caption{Performance of computation intensive applications
-%    on dragonfly with default setting and different numbers of
-%    GPU's per node}
-%  \label{fig:dfly_gpu_comp}
-%\end{figure}
 
 \subsection{Impact of Network Bandwidth}
 
@@ -134,21 +123,21 @@ the default 1x network bandwidth becomes a performance bottleneck for many
 cases is seen.  Thus, the impact of varying network bandwidth along with number of
 GPUs/nodes on application performance is studied next. 
 
-\begin{figure*}[t]
+\begin{figure}[!htbp]
 \centering
     \includegraphics[width=0.8\columnwidth]{figure/plots/bw/ftree-bw-mapping-all.eps}
   \caption{Speedup for the 4 GPUs/node configuration over 1 GPU/node in fat-tree, 1x network
   bandwidth configuration. Data is shown only for job sizes of 128 GPUs.}
   \label{fig:bw_ftree}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[t]
+\begin{figure}[!htbp]
 \centering
     \includegraphics[width=0.8\columnwidth]{figure/plots/bw/dfly-bw-mapping-all.eps}
   \caption{Speedup for the 4 GPUs/node configuration over 1 GPU/node in 1D dragonfly, 1x network
   bandwidth configuration. Data is shown only for job sizes of 128 GPUs.}
   \label{fig:bw_dfly}
-\end{figure*}
+\end{figure}
 
 In the simulation experiments, it is observed that the impact of network bandwidth on jobs of different sizes
 shares similar trends. Hence, only the data for a job size of 128 processes is presented.
@@ -173,7 +162,7 @@ to achieve 90\% of the performance from the default setting; AMG and SW4lite nee
 4x bandwidth while
 Kripke only needs x/8 bandwidth. 
 
-\begin{table}[t]
+\begin{table}[!htbp]
   \centering
   \caption{Minimum bandwidth required to achieve 90\% of the performance of the
   default 1 GPU/node configuration for fat-tree}
@@ -239,7 +228,7 @@ of message scheduling is similar for both fat-tree and 1D dragonfly. Thus,
 results for the 1D dragonfly are only discussed in detail. 
 
 %{\bf Sap: check all numbers in this section}
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.8\columnwidth]{figure/plots/sched/dfly-sched-mapping-stencil.eps}
   \vspace{-0.5in}
@@ -259,7 +248,7 @@ the default FCFS scheduler. A similar trend is observed for the 8 GPUs per node
 cases: the RR scheduler improves the speed up from 0.48 with the FCFS scheduler to 0.76
 for the 64-process job, and from 0.22 to 0.35 for the 512-process job. 
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
 \centering
   \includegraphics[width=0.8\columnwidth]{figure/plots/sched/dfly-sched-mapping-subcom.eps}
   \vspace{-0.5in}
@@ -278,7 +267,7 @@ Stencil4d and Subcomm3d are communication-intensive, the impact of message
 scheduling is different. This is because the communication characteristics in
 these two applications are different. 
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.8\columnwidth]{figure/plots/sched/dfly-sched-mapping-laghos.eps}
   \vspace{-0.5in}
@@ -305,7 +294,7 @@ setting.
 %  \label{fig:amg_scheduling_dfly}
 %\end{figure}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.8\columnwidth]{figure/plots/sched/dfly-sched-mapping-sw4lite.eps}
   \vspace{-0.5in}

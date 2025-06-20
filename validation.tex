@@ -46,15 +46,15 @@ as well as computational capability (IBM PowerPC vs Intel Xeon) of the traced
 system are different from the target system.
 %Finally, I use the exact job and node mapping in the simulation as the real
 %job when run on Quartz. 
-
-\begin{figure}[h]
+\FloatBarrier
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.8\columnwidth]{figure/val/quartztopo.pdf}
   \caption{A Quartz pod with eight aggregate and eight leaf switches, and all links.}
   \label{fig:quartz_pod}
 %\end{multicols}
 \end{figure}
-
+\FloatBarrier
 \vspace{0.08in}
 \noindent{\bf Quartz Topology:} The Quartz system deploys a 3-level fat-tree, with a 2:1
 tapering at each of its 84 leaf switches. There are 84 aggregate switches and 32
@@ -86,7 +86,7 @@ These results suggest that TraceR-CODES predictions reasonably approximate
 the actual runtime on real systems for multi-job workloads even when the
 computational capability and underlying network are different.
 
-\begin{figure}[h]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\columnwidth]{figure/val/quartz.eps}
 \caption{Validation of TraceR-CODES (mean percentage error in predicted runtime compared to the actual runtime).}

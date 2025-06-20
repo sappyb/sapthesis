@@ -1,166 +1,217 @@
+The SDN controller has the information of the traffic in
+the network. It then uses the traffic information and network information
+to schedule the traffic. We call the scheduling algorithm {\em SDN-based
+routing}. Clearly, SDN-based routing can be different
+for different network topologies and is constrained by the underlying
+network routing mechanism such as single-path routing or adaptive routing. 
+In this work, I develop SDN-based routing for both full-bisection bandwidth
+fat-trees and tapered fat-trees, with support for single-path as well as
+adaptive routing.
 
-In this work, I develop SDN-based routing techniques for both full-bisection fat-trees and tapered fat-trees, with support for single-path as well as multipath routing. My primary objective is to minimize congestion and balance link utilization—particularly for large elephant flows—in order to improve overall communication performance in high-performance computing systems.
+We consider routing (scheduling) elephant flows that are long-lived
+and bandwidth-intensive. In the discussion, we will
+model the system as a directed
+graph \( G = (V=S\cup N, E) \), where $N$ is the set of compute nodes,
+$S$ is the set of switches, and $V$ is the set of switches ($S$) and
+compute nodes ($N$), and \( E \) is the set of directed links.
+The traffic demand is represented by a set of
+elephant flows with each flow being denoted as a source-destination pair
+$f_i = (s_i, d_i)$, where $s_i, d_i \in N$.
+\[D = \{f_1=(s_1, d_1), f_2=(s_2, d_2), ..., f_n = (s_n, d_n)\}\] 
 
-Elephant flows are long-lived and bandwidth-intensive. When multiple such flows share the same network link, they contend for limited bandwidth and introduce significant congestion. This behavior makes elephant flows the primary contributors to network bottlenecks in HPC and datacenter environments. Accordingly, I define congestion as a measure of contention on a link, quantified by the number of active elephant flows traversing it.
+Given a traffic demand $D$, the objective of an SDN-based routing scheme is to
+achieve load balancing. In the following, we will first present our SDN-based
+routing for networks with single path routing and then discuss the
+scheme for networks with adaptive routing.
 
-Let the network be modeled as a directed graph \( G = (V, E) \), where \( V \) is the set of switches and terminals, and \( E \) is the set of directed links. Let \( F = \{f_1, f_2, \dots, f_n\} \) denote the set of elephant flows in the network. Each flow \( f \in F \) is assigned a single path \( P_f \subseteq E \) by the SDN controller.
+\subsection{Single path routing}
 
-For single-path routing, the congestion \( c(e) \) on a link \( e \in E \) is defined as:
+For single-path routing, all packets of a flow
+follow the same path. For a traffic demand
+$D = \{f_1=(s_1, d_1), f_2=(s_2, d_2), ..., f_n = (s_n, d_n)\}$, 
+we will denote the path for flow $f_i$ to be $p_i$, which consists of a set
+of directed links. For a given routing $R$,
+let $L_l$ be the set of flows that are routed through link $l$.
+The load of the link $l$ is the number of flows using the link ($|S_l|$).
+The load of a path $p$ is the maximum load of the loads on all links
+in the path: $L_p = \max_{l \in p} {|S_l|}$. $L_p$ is referred to as the path
+load. The load of the network for traffic demand $D$
+is the maximum of loads among all links:
+\[L_D = \max_{l\in E} {|S_l|}\]
 
-\[
-c(e) = \sum_{f \in F} \mathbf{1}_{\{e \in P_f\}}
-\]
-
-Here, \( \mathbf{1}_{\{e \in P_f\}} \) is an indicator function that equals 1 if link \( e \) is part of the path assigned to flow \( f \), and 0 otherwise.
-
-The maximum link congestion across the network is then given by:
-
-\[
-C_{\text{max}} = \max_{e \in E} c(e)
-\]
-
-This congestion metric forms the basis for evaluating routing efficiency in my single-path SDN scheme. It guides the routing decision process by identifying and minimizing the worst-case contention experienced on any single link in the network.
-
-
-\subsection{SDN-Singlepath Routing}
-
-In single-path SDN routing, I assign each elephant flow a unique route through the network. Unlike traditional static routing methods, which rely on preconfigured tables, SDN enables dynamic path selection using a global view of current link utilization. This centralized perspective allows the controller to make informed decisions that minimize congestion and avoid oversubscription on critical links.
-
-To explore the design space of single-path routing under SDN, I implement two complementary strategies: \textit{SDN-greedy} and \textit{SDN-optimal} which we talk about in the following sections.
+The design objective of our SDN-based single-path routing schemes is to
+minimize $L_D$ for traffic demand $D$. Our first algorithm,
+\textit{SDN-greedy}, is a heuristic algorithm while the second algorithm,
+\textit{SDN-optimal}, is optimal for full-bisection fat trees. 
 
 \subsubsection{SDN-greedy}
 
-\textit{SDN-greedy} is a lightweight, single-path routing algorithm designed to operate on both full-bisection and tapered fat-tree topologies. The algorithm leverages the SDN controller’s global view of the network to make path selection decisions that minimize link congestion in real time.
-
-As shown in algorithm~\ref{alg:sdn_greedy}, the controller processes each elephant flow individually. For a given flow, it enumerates all feasible paths between the source and destination switches. For each candidate path, it computes the maximum link congestion \( c(e) \) across all links \( e \) on the path, which corresponds to the path's worst-case contention. This value is equivalent to evaluating the local \( C_{\text{max}} \) for that path. The controller then selects the path with the smallest such value and assigns it to the flow.
-
-By repeating this process for all elephant flows in the current scheduling phase, the algorithm constructs a routing table that seeks to keep the network-wide maximum link congestion low. This greedy strategy effectively spreads traffic across the network to reduce the risk of bottlenecks. Due to its simplicity and responsiveness, SDN-greedy is well-suited for environments with light to moderate traffic.
-
-However, because flows are routed independently, SDN-greedy may cause multiple flows to converge on the same links, especially under heavy or bursty traffic. This lack of global coordination can lead to suboptimal load balancing in dense communication scenarios.
+\textit{SDN-greedy} is a lightweight, single-path routing algorithm
+designed to operate on both full-bisection and tapered fat-tree
+topologies. As shown in Algorithm~\ref{alg:sdn_greedy}, the controller
+processes each elephant flow in order. For each flow, it enumerates
+all feasible paths between the source and the destination. For each
+candidate path, it computes the maximum link load for the path.
+The controller then selects the path with the smallest maximum link load
+and assigns path to the flow.
+By repeating this process for all elephant flows in the current
+scheduling phase, the algorithm constructs a routing table that seeks
+to keep the network-wide maximum link congestion low. This greedy
+strategy effectively spreads traffic across the network. However, this
+greedy algorithm may not result in the optimal scheduling for a
+traffic demand, especially when the traffic is dense. 
 
 \begin{algorithm}[H]
 \DontPrintSemicolon
 \caption{SDN-greedy algorithm}
 \label{alg:sdn_greedy}
-\KwInput{Elephant flows in a phase $EF$}
-\KwOutput{Load-balanced routing table $Routing\_table$}
-\SetKwFunction{FMain}{ComputeLoadBalancedRoutingTable}
+\KwInput{Elephant flows in a phase $D$}
+\KwOutput{Routing table $Routing\_table$ for all flows in $D$}
+\SetKwFunction{FMain}{SDN-greedy}
 \SetKwProg{Fn}{Function}{:}{}
-\Fn{\FMain{$EF$}}{
+\Fn{\FMain{$D$}}{
     Initialize an empty map $Routing\_table$\;
-    \ForEach{$E \in EF$}{
+    \ForEach{$f_i = (s_i, d_i) \in D$}{
         Get current link loads in the network\;
-        Get all possible paths for $Source$ and $Destination$ of $E$\;
-        \ForEach{$path$ in $All\_possible\_paths$}{
-            Compute maximum link congestion $c(e)$ for links in $path$\;
-        }
-        Add path with minimum $C_{\text{max}}$ to $Routing\_table$ for $E$\;
+        Compute all possible paths for $f_i$\;
+        Compute the path load for each of the possible paths based
+        on the current link loads of the network\;
+        Add the path with minimum path for $f_i$ to
+        $Routing\_table$ for $f_i$\;
     }
     \KwRet{$Routing\_table$}\;
 }
 \end{algorithm}
 
+\subsection{SDN-optimal}
 
+While \textit{SDN-greedy} spreads the flows to paths with minimum path
+loads in a greedy manner, and does not guarantee to achieve optimal $L_D$ for
+a given set of elephant flows, \textit{SDN-optimal} considers the set of flows
+as a whole and achieves optimal $L_D$ for full-bisection fat trees.
+In the following, we will first describe SDN-optimal for full-bisection fat
+trees. After that we will discuss how to extend it for tapered fat trees. 
 
-\subsection{SDN-Optimal Routing Algorithm}
+Given traffic demand
+$D = \{f_1=(s_1, d_1), f_2=(s_2, d_2), ..., f_n = (s_n, d_n)\}$, we define
+$SRC_{s\in N} = \{f_i = (s_i, d_i) | s_i = s\}$ and $DST_{d\in N} =
+\{f_i = (s_i, d_i) | d_i = s\}$.  $SRC_s$ is the set of flows in $D$ whose
+source node is $s$ and $DST_d$ is the set of flows in $D$ whose destination
+node is $d$. We define the node load for a given $D$ as 
+\[NL_D = \max(\max_{s \in N} \{|SRC_s|\}, \max_{d \in N} \{|DST_d|\})\]
 
-In fat-tree topologies, particularly full-bisection fat-trees, minimizing link contention is crucial to improving communication performance. In this work, I introduce a single-path routing algorithm, called \textit{SDN-optimal}, that achieves the theoretically lowest possible value of maximum link congestion, denoted by \( C_{\text{max}} \), across all network links. Specifically, SDN-optimal guarantees that \( C_{\text{max}} = 1 \) for any permutation of elephant flows in a full-bisection fat-tree. This is achieved by (1) partitioning the flows into a minimum number of disjoint permutations, and (2) scheduling each permutation such that no two flows share any link. The second step leverages the structural properties of full-bisection fat-trees and Hall’s Marriage Theorem to ensure contention-free routing.
+The node load for a traffic demand is either the maximum number of flows
+coming from the same source or the maximum number of flows going to
+the same destination in the traffic demand. In a fat tree topology, since
+each compute node connects to one link to a switch, we have the following
+theory.
 
-\subsubsection{SDN-optimal Algorithm for Full-Bisection Fat-Trees}
+{\bf Theorem 1}: For a fat-tree topology and a given traffic demand $D$,
+for any single path routing scheme, $L_D \ge NL_D$.
 
-The SDN-optimal algorithm consists of two main steps: (1) partitioning the traffic pattern into \( k \) disjoint permutations, and (2) routing each permutation using a contention-free schedule.
+{\em Proof:} Since each compute
+node only connects one out-going link and one incoming link. Any single path
+routing scheme must route the flows from a source to the out-going link that
+connects to it and route the flows to a destination to the in-coming link
+to the destination. Hence,
+\[L_D = \max_{l\in E} {|S_l|} \ge \max_{l\ is\ a\ out-going\ link\ of\ n\in N} {|S_l|}\] and 
+\[L_D = \max_{l\in E} {|S_l|} \ge \max_{l\ is\ an\ incoming\ link\ of\ n\in N} {|S_l|}.\]
+Hence, 
+\[L_D = \max_{l\in E} {|S_l|} \ge \max(\max_{s \in N} \{|SRC_s|\}, \max_{d \in N} \{|DST_d|\}) = NL_D.\] $\Box$
 
-\paragraph{Step 1: Flow Partitioning into Permutations.}  
-Given a set of elephant flows \( F \), I construct a bipartite graph \( G = (S, D, E) \), where \( S \) and \( D \) are source and destination nodes, and each edge \( e \in E \) represents a flow. To ensure that each source and destination has the same number of flows (i.e., a regular graph), I add dummy nodes and edges to make the graph \( k \)-regular, where \( k \) is the maximum degree in the original graph. I then apply edge-coloring (via Kőnig’s Theorem) to decompose the graph into \( k \) disjoint perfect matchings. Each matching corresponds to a permutation \( P_1, P_2, ..., P_k \), where each node appears exactly once per permutation. The algorithm is described in algorithm ~\ref{alg:partition_permutations}
+\textit{SDN-optimal} consists of two steps. Given a traffic demand $D$,
+the first step is to partition $D$ into $NL_D$ permutations. In the second
+step, the algorithm uses a contention free scheduling algorithm to schedule
+each of the $NL_D$ permutations. Since with a contention free scheduling
+algorithm, each permutation can be routed with no link contention in a
+full-bisection tree. Hence, for each permutation, the maximum link load among
+all links in the network
+is at most 1. As a result, scheduling $NL_D$ permutations will
+have a maximum link load among all links in the network of $NL_D$. In other
+words, with \textit{SDN-optimal}, $L_D \le NL_D$. Hence, \textit{SDN-optimal}
+is optimal for any traffic demand on a full bisection fat tree. The following
+theorem summarizes this discussion. 
+
+{\bf Theorem 2}: For a full bisection fat tree and
+\textit{SDN-optimal}, for any traffic demand $D$, $L_D = NL_D$:
+\textit{SDN-optimal} is optimal for the full bisection fat tree. 
+$\Box$
+
+Next, we
+will give details of the two steps in the algorithm.
+
+\paragraph{Step 1: Partitioning $D$ into $NL_D$ Permutations.}
+Given the traffic demand $D$, the algorithm first constructs a
+bipartite graph \( G = (S, D, E) \), where \( S \) and \( D \) are
+source and destination nodes in $D$, and each edge \( e \in E \) represents
+a flow: if $(s, d) \in D$, then there is an edge from $s\in S$ to $d\in D$. 
+This initial bipartite graph is then augmented to be a $NL_D$-regular
+multi-bipartite graph by adding dummy nodes and edges. Multi-bipartite graph
+allows multiple edges between two nodes. We first add dummy nodes such that
+$|S|$ is the same as $|D|$. After that, we add dummy edges to make each node
+in $S$ has a degree of $NL_D$ and each node in $D$ has a degree of $NL_D$.
+For each node in $|S|$, if its degree is less than $NL_D$, we find a node
+in $D$ whose degree is less than $NL_D$ and add a dummy edge between the
+two node. This process is repeated until all nodes have $NL_D$ degree. Once
+the $NL_D$-regular multi-bipartite graph is build, 
+the algorithm then applies edge-coloring (via Kőnig’s Theorem)
+to decompose the graph into \( NL_D \) disjoint perfect matchings.
+(XXXXXXXX add citation). Each matching corresponds to a permutation
+\( P_1, P_2, ..., P_{NL_D} \). The dummy edge is then removed from the
+obtained permutation to yield the final permutations.
+The algorithm is described in algorithm ~\ref{alg:partition_permutations}
 
 \begin{algorithm}[H]
 \DontPrintSemicolon
 \caption{Flow Partitioning into Disjoint Permutations}
 \label{alg:partition_permutations}
 
-\KwInput{Flow set $F$, max degree $k$}
-\KwOutput{$k$ disjoint permutations $P_1, ..., P_k$}
+\KwInput{Flow set $D$}
+\KwOutput{$NL_D$ disjoint permutations $P_1, ..., P_{NL_D}$}
 
 Construct bipartite graph $G = (S, D, E)$ from flows in $F$\;
 
-Pad $G$ with dummy nodes/edges to make it $k$-regular\;
+Pad $G$ with dummy nodes and edges to make it $NL_D$-regular multi-bipartite
+graph\;
 
-Apply edge-coloring to obtain $k$ disjoint matchings $P_1, ..., P_k$\;
+Apply edge-coloring to obtain $NL_D$ disjoint matchings $P_1, ..., P_{NL_D}$\;
 
 Remove dummy flows from each $P_i$\;
 
 \KwRet{$P_1, ..., P_k$}
 \end{algorithm}
 
-\paragraph{Step 2: Contention-Free Scheduling.}  
-For each permutation \( P_i \), the flows are routed through the fat-tree using link-disjoint paths. In a full-bisection bandwidth of the topology, because the number of flows per permutation equals the number of available links at each network layer, Hall’s Marriage Theorem guarantees the existence of a perfect matching, no link will be used by more than one flow in a given permutation. Therefore, the maximum congestion per link in each permutation is exactly 1. The algorithm is described in algorithm ~\ref{alg:contention_free_scheduling}
+\paragraph{Step 2: Contention-Free Scheduling for each permutation}  
 
+Finding a contention-free scheduling for a permutation on a full-bisection
+fat-tree topology is an extensively studied subject. Many efficient algorithms
+exists \cite{} (XXXXXXX find citation). In our implementation, we use the
+algorithm in XXXXX \cite{}.
 
-\begin{algorithm}[H]
-\DontPrintSemicolon
-\caption{Contention-Free Scheduling for Permutation $P_i$}
-\label{alg:contention_free_scheduling}
+\subsubsection{SDN-optimal for Tapered Fat-Trees}
 
-\KwInput{Permutation $P_i$, topology $G$, link usage table $L$}
-\KwOutput{Routing paths for all flows in $P_i$}
+In a tapered fat-tree, bandwidth reduction occurs at higher layers,
+such as the aggregate to core level has less links than leaf to aggregate
+level. This architectural tapering leads to insufficient link capacity
+when routing permutation traffic, where the number of flows often
+exceeds the number of available links at higher levels.
+As a result, \textit{SDN-optimal} does not work on tapered fat-trees
+since achieving a contention-free assignment for all flows within a
+single permutation becomes infeasible.
 
-\tcp{Step 1: Schedule Intra-Pod Flows}
-\ForEach{intra-pod flow $f \in P_i$}{
-  \ForEach{uplink $u$ from source leaf to aggregation}{
-    \If{$u$ is unused}{
-      Find corresponding downlink $d$ to destination leaf\;
-      \If{$d$ is unused}{
-        Assign path: leaf $\rightarrow$ agg $\rightarrow$ leaf\;
-        Mark $u$, $d$ as used; \textbf{break}\;
-      }
-    }
-  }
-  \If{no path assigned}{
-    Apply non-blocking rearrangement to free a valid intra-pod path\;
-  }
-}
+To overcome this limitation, the SDN-optimal routing strategy
+partitions the full permutation into multiple sub-permutations.
+Each sub-permutation is constructed such that the number of flows
+passing through each layer of the network matches the number of
+available links at that layer. This ensures that within each
+sub-permutation, contention-free routing is still possible using
+the techniques previously employed.
 
-\tcp{Step 2: Schedule Inter-Pod Flows}
-\ForEach{inter-pod flow $f \in P_i$}{
-  \ForEach{uplink $u_1$ from source leaf to aggregation}{
-    \If{$u_1$ is unused}{
-      \ForEach{uplink $u_2$ from aggregation to core}{
-        \If{$u_2$ is unused}{
-          Find downlink $d_2$ from core to destination agg\;
-          \If{$d_2$ is unused}{
-            Find downlink $d_1$ to destination leaf\;
-            \If{$d_1$ is unused}{
-              Assign full path: leaf $\rightarrow$ agg $\rightarrow$ core $\rightarrow$ agg $\rightarrow$ leaf\;
-              Mark all links as used; \textbf{break}\;
-            }
-          }
-        }
-      }
-    }
-  }
-  \If{no path assigned}{
-    Apply non-blocking rearrangement to free a valid inter-pod path\;
-  }
-}
-\end{algorithm}
-
-
-\paragraph{Proof Sketch of Optimality.}
-
-In a full-bisection fat-tree, the number of aggregation switches is equal to the number of leaf switches. Each leaf switch has \( \frac{K}{2} \) uplinks to aggregation switches. The total number of links between the leaf and aggregation switches is \( N_{\text{leaf}} \times \frac{K}{2} \). Since each compute node connects to a downlink port on a leaf switch, the total number of compute nodes is also \( N_{\text{leaf}} \times \frac{K}{2} \). In a full permutation traffic pattern, each compute node sends and receives exactly one flow, so the total number of flows in each permutation is equal to the number of compute nodes. Therefore, the number of flows in each permutation is equal to the number of links between the leaf and aggregation switches.
-
-Similarly, the number of links between the aggregation and core switches is also equal to the number of flows in each permutation, because each aggregation switch has \( \frac{K}{2} \) uplinks to core switches. As a result, the number of flows in each permutation exactly matches the number of available links at each layer of the network.
-
-This one-to-one correspondence between flows and available links allows the use of Hall’s Marriage Theorem to guarantee a contention-free assignment. Suppose, for contradiction, that in some permutation, a link is used by more than one flow. Then at least one other link must remain unused, violating the condition required for a perfect matching. This contradiction implies that no two flows in the same permutation can share a link. Therefore, the maximum congestion on any link in any permutation is 1. Since this holds for every permutation, the maximum link congestion across all permutations is also 1. Thus, the SDN-optimal algorithm guarantees \( C_{\text{max}} = 1 \) and achieves contention-free routing in a full-bisection fat-tree.
-
-\subsubsection{SDN-Optimal for Tapered Fat-Trees}
-
-In a tapered fat-tree, bandwidth reduction occurs at higher layers, such as the aggregate to core level has less links than leaf to aggregate level. This architectural tapering leads to insufficient link capacity when routing permutation traffic, where the number of flows often exceeds the number of available links at higher levels. As a result, flows begin to contend for shared links, and the assumptions of perfect matching guaranteed by Hall’s Marriage Theorem no longer hold. Consequently, achieving a contention-free assignment for all flows within a single permutation becomes infeasible.
-
-To overcome this limitation and preserve optimal scheduling, the SDN-optimal routing strategy partitions the full permutation into multiple sub-permutations. Each sub-permutation is constructed such that the number of flows passing through each layer of the network matches the number of available links at that layer. This ensures that within each sub-permutation, contention-free routing is still possible using the techniques previously employed.
-
-Our goal is to make sure that we create sub-permuatations by selects flows in such a way that the links in between each fat-tree layers have no contention and has the maximum utilization. 
-To construct these sub-permutations, the algorithm first selects flows that traverse the core layer—typically inter-pod flows that consume both leaf-to-aggregate and aggregate-to-core links. It continues selecting such flows until all available core-level links are utilized. At this point, adding more inter-pod flows would introduce contention. The algorithm then fills the remaining capacity at the aggregation layer by selecting intra-pod flows, which consume only leaf-to-aggregate and aggregate-to-leaf links. The result is a sub-permutation that fully utilizes available link resources without exceeding capacity at any layer. This allows Hall’s Marriage Theorem to be applied to guarantee a conflict-free routing for each sub-permutation.
+Our goal is to make sure that we create sub-permuatations by
+selects flows in such a way that the links in between each
+fat-tree layers have no contention and has the maximum utilization. 
+To construct these sub-permutations, the algorithm first selects
+flows that traverse the core layer—typically inter-pod flows that consume both leaf-to-aggregate and aggregate-to-core links. It continues selecting such flows until all available core-level links are utilized. At this point, adding more inter-pod flows would introduce contention. The algorithm then fills the remaining capacity at the aggregation layer by selecting intra-pod flows, which consume only leaf-to-aggregate and aggregate-to-leaf links. The result is a sub-permutation that fully utilizes available link resources without exceeding capacity at any layer. This allows Hall’s Marriage Theorem to be applied to guarantee a conflict-free routing for each sub-permutation.
 
 \begin{algorithm}[H]
 \caption{Sub-Permutation Construction Using Core and Aggregate Link Counters}
@@ -208,45 +259,55 @@ $P_{\text{list}} \gets \emptyset$\;
 \Return $P_{\text{list}}$\;
 \end{algorithm}
 
+\subsection{Adaptive Routing}
 
-\subsection{SDN-Multipath Routing}
+Adaptive routing enables traffic to be split across multiple paths adaptively
+based on the network condition, improving bandwidth utilization and often
+reducing congestion. This is a very effective routing scheme for fat-tree.
+However, in many scenarios where flow paths overlap significantly, causing
+contention. On the other hand, for a full bisection bandwidth fat-tree, any
+permutation traffic including the shift traffic pattern can be scheduled
+without contention using single-path routing. Hence, for such traffic pattern,
+using single path routing can achieve higher performance than
+adaptive routing. Based on this observation, I propose \textit{SDN-adaptive}
+that adapt between these two strategies: if the traffic demand $D$ is
+less than a permutation, use SDN-optimal; otherwise, use the underlying
+adaptive routing.
 
-Multipath routing enables traffic to be split across multiple paths, improving bandwidth utilization and often reducing congestion. However, in many scenarios where flow paths overlap significantly, for example in shift traffic, this can introduce additional contention. In contrast, single-path routing (such as SDN-optimal) can perform better when flows are carefully scheduled to avoid bottlenecks in those cases.
+%I propose \textit{SDN-adaptive} routing for the multipath routing.
+%\subsubsection{SDN-adaptive}
+%The key idea behind SDN-adaptive is to first gather runtime information about the application’s traffic characteristics. During an initial profiling phase, SDN-adaptive collects communication performance data by running one iteration using adaptive multipath routing. This information is then sent to the SDN controller, which uses it decide the routing.
+%The process begins by executing one iteration of the application using adaptive multipath routing. The SDN controller records the communication time from this iteration as a reference. Then, the full simulation is restarted using SDN-optimal routing. After completing the first iteration of this SDN-optimal run, the controller compares the current communication time with the previously recorded time from the adaptive run.
+%
+%If SDN-optimal demonstrates better performance (i.e., lower communication time), it is retained for the rest of the simulation. If, however, SDN-optimal is slower than adaptive, this indicates that multipath routing is more effective for the application's communication pattern. In that case, the controller immediately switches to adaptive routing for the remainder of the simulation.
+%
+%This design allows the routing policy to be tuned to the observed behavior of the application, ensuring better adaptability across diverse workloads. The algorithm is described in algorithm ~\ref{alg:sdn_adaptive_api}
 
-To intelligently decide between these two strategies, I propose \textit{SDN-adaptive} routing for the multipath routing.
-\subsubsection{SDN-adaptive}
-The key idea behind SDN-adaptive is to first gather runtime information about the application’s traffic characteristics. During an initial profiling phase, SDN-adaptive collects communication performance data by running one iteration using adaptive multipath routing. This information is then sent to the SDN controller, which uses it decide the routing.
-The process begins by executing one iteration of the application using adaptive multipath routing. The SDN controller records the communication time from this iteration as a reference. Then, the full simulation is restarted using SDN-optimal routing. After completing the first iteration of this SDN-optimal run, the controller compares the current communication time with the previously recorded time from the adaptive run.
-
-If SDN-optimal demonstrates better performance (i.e., lower communication time), it is retained for the rest of the simulation. If, however, SDN-optimal is slower than adaptive, this indicates that multipath routing is more effective for the application's communication pattern. In that case, the controller immediately switches to adaptive routing for the remainder of the simulation.
-
-This design allows the routing policy to be tuned to the observed behavior of the application, ensuring better adaptability across diverse workloads. The algorithm is described in algorithm ~\ref{alg:sdn_adaptive_api}
-
-\begin{algorithm}[H]
-\DontPrintSemicolon
-\caption{SDN-adaptive algorithm}
-\label{alg:sdn_adaptive_api}
-
-\KwInput{%
-  Application $A$; \\
-  Topology $G$; \\
-  Routing schemes: SDN-optimal and Adaptive
-}
-\KwOutput{%
-  Final routing strategy and flow configuration
-}
-
-Run one iteration of $A$ using Adaptive routing\;
-Record $\mathrm{commTime}_{\text{Adaptive}}$\;
-
-Start full simulation of $A$ using SDN-optimal routing\;
-After first iteration, record $\mathrm{commTime}_{\text{SDN-optimal}}$\;
-
-\If{$\mathrm{commTime}_{\text{SDN-optimal}} < \mathrm{commTime}_{\text{Adaptive}}$}{
-  Continue simulation with SDN-optimal routing\;
-}
-\Else{
-  Switch to Adaptive routing for remainder of simulation\;
-}
-\end{algorithm}
+%\begin{algorithm}[H]
+%\DontPrintSemicolon
+%\caption{SDN-adaptive algorithm}
+%\label{alg:sdn_adaptive_api}
+%
+%\KwInput{%
+%  Application $A$; \\
+%  Topology $G$; \\
+%  Routing schemes: SDN-optimal and Adaptive
+%}
+%\KwOutput{%
+%  Final routing strategy and flow configuration
+%}
+%
+%Run one iteration of $A$ using Adaptive routing\;
+%Record $\mathrm{commTime}_{\text{Adaptive}}$\;
+%
+%Start full simulation of $A$ using SDN-optimal routing\;
+%After first iteration, record $\mathrm{commTime}_{\text{SDN-optimal}}$\;
+%
+%\If{$\mathrm{commTime}_{\text{SDN-optimal}} < \mathrm{commTime}_{\text{Adaptive}}$}{
+%  Continue simulation with SDN-optimal routing\;
+%}
+%\Else{
+%  Switch to Adaptive routing for remainder of simulation\;
+%}
+%\end{algorithm}
 

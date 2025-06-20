@@ -1,18 +1,3 @@
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=0.8\columnwidth]{figure/val/mpi-scaled.eps}
-  \includegraphics[width=0.8\columnwidth]{figure/val/mpi.eps}
-  \caption{Computation and communication characteristics of all applications without scaling (left) and with scaling for GPUs (right)
-running on 32 processes.} 
-  \label{fig:trace_profile}
-\end{figure*}
-
-
-% The experiment has two components. First, I validate the TraceR-CODES
-% framework by comparing simulation results with measurement results on a real
-% supercomputer. Second, I study the impact of the hardware parameters on the
-% performance. In the following, I will give details about our experiment
-% design and configuration.
 
 \label{sec:applicationworkload}
 
@@ -78,3 +63,13 @@ appears at least four times in the 20 workloads. This warrants that each job
 size of each application has been executed under different conditions in the
 experiments.
  
+\FloatBarrier
+\begin{figure*}[!htbp]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{figure/val/mpi-scaled.eps}
+  \includegraphics[width=0.8\columnwidth]{figure/val/mpi.eps}
+  \caption{Computation and communication characteristics of all applications without scaling (left) and with scaling for GPUs (right)
+running on 32 processes.} 
+  \label{fig:trace_profile}
+\end{figure*}
+\FloatBarrier

@@ -4,7 +4,7 @@ The result of various SDN techniques which are used in HPC is presented here
 
 In this section, we compare the impact of different flow identification techniques on the SDN algorithm for various applications under full bisection fat-tree and 3-to-1 tapered fat-tree configurations. The evaluation includes performance metrics across application communication time for different applications. To evaluate the flow detection technique, we kept the routing fixed as SDN‑optimal and used communication‑computation phase detection, while varying the flow detection methods.
 
-\subsubsection{Performance Under Full Fat-Tree}
+\subsubsection{Performance Under full bisection fat-tree}
 \begin{figure}[h]
   \centering
   \includegraphics[width=\columnwidth]{./figs_4/full_fat_flow_detection.pdf}
@@ -29,7 +29,7 @@ The Figure ~\ref{fig:ld_full} shows maximum outgoing data (Bytes) through ports 
 Green represents the maximum load at the leaf switches, Blue indicates the maximum load at the aggregate switches, and Red signifies the maximum load at the core switches. Observations reveal that the Random-Permutation application shows the highest load at the leaf switch under the Static configuration. Similarly, Stencil3D and Stencil4D exhibit high loads at both leaf and aggregate switches in Static and Adaptive configurations. Nekbone records the highest outgoing data, particularly at the leaf switch under the Static configuration. When comparing SDN loads, they are consistently lower than those in Static configurations and remain lower than Adaptive configurations when communication density is moderate, as observed in applications like Random-Permutation, Shift, Stencil3D, and Stencil4D. SDN effectively distributes loads across ports, resulting in a positive speedup over static routing.
 \end{comment}
 
-\subsubsection{Performance Under Tapered Fat-Tree}
+\subsubsection{Performance under 3-to-1 tapered fat-tree}
 \begin{figure}[h]
   \centering
   \includegraphics[width=\columnwidth]{./figs_4/taper_fat_flow_detection.pdf}
@@ -37,10 +37,10 @@ Green represents the maximum load at the leaf switches, Blue indicates the maxim
   \label{fig:fld_taper}
 \end{figure}
 
-The Figure ~\ref{fig:fld_taper} illustrates the communication speedup achieved by different flow detection techniques (SDN User, SDN DNN, and SDN Threshold) under a 3-to-1 taper fat-tree topology with 1536 nodes and a 3:1 tapering ratio. This topology emphasizes the impact of reduced bandwidth at higher levels of the Fat-Tree structure.
+The Figure ~\ref{fig:fld_taper} illustrates the communication speedup achieved by different flow detection techniques (SDN User, SDN DNN, and SDN Threshold) under a 3-to-1 taper fat-tree topology with 1536 nodes and a 3:1 tapering ratio. This topology emphasizes the impact of reduced bandwidth at higher levels of the fat-tree structure.
 
 
-In a tapered fat-tree topology, even a random-permutation pattern represents a relatively dense communication workload. To better demonstrate the effectiveness of our routing mechanism in balancing traffic, we introduced Random-Permutation-Third by removing two-thirds of the communication from a random-permutation of 1536 nodes, retaining only eight out of the 24 communication flows passing through a leaf router. Our evaluation revealed that SDN User consistently achieved the highest speedup, exceeding 6x, highlighting the benefits of early user-provided flow identification that enables optimal traffic balancing from the start. In contrast, SDN DNN and SDN Threshold exhibited moderate speedups of approximately 1.5x and 1.2x, respectively, due to delayed flow detection. Similar trends were observed in the Shift application, where SDN User maintained its superior performance, while SDN DNN and SDN Threshold provided moderate improvements over static routing. In compute-heavy applications such as Milc and Nekbone, the performance gap between techniques narrowed, though SDN User remained the top performer. The results suggest that compute-heavy traffic benefits from steady-state optimizations, though early flow detection consistently outperformed or matched the threshold-based approach. These findings underscore the critical role of early flow detection in achieving optimal traffic balancing, particularly in tapered Fat-Tree topologies with constrained bandwidth, as reflected by higher speedup values relative to baseline D-mod-K routing.
+In a 3-to-1 tapered fat-tree topology, even a random-permutation pattern represents a relatively dense communication workload. To better demonstrate the effectiveness of our routing mechanism in balancing traffic, we introduced Random-Permutation-Third by removing two-thirds of the communication from a random-permutation of 1536 nodes, retaining only eight out of the 24 communication flows passing through a leaf router. Our evaluation revealed that SDN User consistently achieved the highest speedup, exceeding 6x, highlighting the benefits of early user-provided flow identification that enables optimal traffic balancing from the start. In contrast, SDN DNN and SDN Threshold exhibited moderate speedups of approximately 1.5x and 1.2x, respectively, due to delayed flow detection. Similar trends were observed in the Shift application, where SDN User maintained its superior performance, while SDN DNN and SDN Threshold provided moderate improvements over static routing. In compute-heavy applications such as Milc and Nekbone, the performance gap between techniques narrowed, though SDN User remained the top performer. The results suggest that compute-heavy traffic benefits from steady-state optimizations, though early flow detection consistently outperformed or matched the threshold-based approach. These findings underscore the critical role of early flow detection in achieving optimal traffic balancing, particularly in tapered fat-tree topologies with constrained bandwidth, as reflected by higher speedup values relative to baseline D-mod-K routing.
 
 
 \begin{comment}
@@ -52,7 +52,7 @@ In a tapered fat-tree topology, even a random-permutation pattern represents a r
 \end{figure*}
 
 
-In tapered, the aggregate switch ports have a lot of load, and in all cases, SDN with all various flow identification techniques have always drtibuted this load across the the other switch ports. SDN performance in load distribution is almost same as adaptive and in cases for Shift and Random-Permutation-Third it is doing a slightly better job than adaptive.
+In tapered fat-tree, the aggregate switch ports have a lot of load, and in all cases, SDN with all various flow identification techniques have always drtibuted this load across the the other switch ports. SDN performance in load distribution is almost same as adaptive and in cases for Shift and Random-Permutation-Third it is doing a slightly better job than adaptive.
 
 
 
@@ -73,7 +73,7 @@ In tapered, the aggregate switch ports have a lot of load, and in all cases, SDN
 \subsection{Evaluation of Phase Identification}
 This section evaluates the effectiveness of phase identification, across varioous applications under full bisection fat-tree and 3-to-1 tapered fat-tree configurations. To evaluate the communication‑computation phase identification technique, we kept the routing fixed as SDN‑optimal and used the SDN user flow detection method, while varying the phase identification methods.
 
-\subsubsection{Performance Under Full Fat-Tree}
+\subsubsection{Performance under full bisection fat-tree}
 
 
 \begin{figure}[h]
@@ -82,26 +82,26 @@ This section evaluates the effectiveness of phase identification, across varioou
   \caption{Comparison of phase identification in full bisection fat-tree of 1024 nodes}
   \label{fig:phase_full}
 \end{figure}
-The Figure~\ref{fig:phase_full} shows phase identification results for full Fat-tree, where the x-axis represents different workloads, including Random-permutation, Random-mixed, Shift, Stencil3d, Stencil4d, Stencil-mixed, Milc, and Nekbone, while the y-axis quantifies the relative speedup. 
-In Full Fat-Tree routing, phase-based optimization leverages threshold-based flow classification and SDN routing to improve communication efficiency. The analysis of communication speedup reveals notable improvements in random-mixed, stencil-mixed, and nekbone, with random-mixed achieving a 7.98\% increase in performance. The phase identification mechanism efficiently distinguishes between different communication phases. When a phase transition occurs, it promptly loads the corresponding routing table, ensuring seamless adaptation to dynamic communication patterns.
+The Figure~\ref{fig:phase_full} shows phase identification results for full fat-tree, where the x-axis represents different workloads, including Random-permutation, Random-mixed, Shift, Stencil3d, Stencil4d, Stencil-mixed, Milc, and Nekbone, while the y-axis quantifies the relative speedup. 
+In full bisection fat-tree routing, phase-based optimization leverages threshold-based flow classification and SDN routing to improve communication efficiency. The analysis of communication speedup reveals notable improvements in random-mixed, stencil-mixed, and nekbone, with random-mixed achieving a 7.98\% increase in performance. The phase identification mechanism efficiently distinguishes between different communication phases. When a phase transition occurs, it promptly loads the corresponding routing table, ensuring seamless adaptation to dynamic communication patterns.
 
 The evaluation time for each phase is one-tenth of a polling phase, during which the phase identifier continuously monitors network flows to detect transitions between computation and communication phases. Upon detecting a phase change, it swiftly loads the appropriate routing table to optimize data flow. In random-mixed, stencil-mixed, and nekbone, frequent transitions between computation and communication phases trigger rapid routing table updates, leading to measurable performance improvements in these applications.
 
 
-\subsubsection{Performance Under Tapered Fat-Tree}
+\subsubsection{Performance under 3-to-1 tapered fat-tree}
 \begin{figure}[h]
   \centering
   \includegraphics[width=\columnwidth]{./figs_4/phase_taper.pdf}
   \caption{Comparison of phase identification in full bisection fat-tree of 1536 nodes}
   \label{fig:phase_taper}
 \end{figure}
-The Figure~\ref{fig:phase_taper} shows phase identification results for full Fat-tree,
-In Tapered Fat-Tree routing, phase-based optimization dynamically adjusts traffic injection rates using threshold-based flow classification and SDN routing to further enhance communication efficiency. The analysis of communication speedup shows notable improvements in random-mixed, stencil-mixed, and nekbone, with random-mixed achieving an 11.13\% increase in performance, surpassing the gains observed in Full Fat-Tree routing. The phase identification mechanism efficiently detects phase transitions and dynamically manages traffic flow to reduce network congestion
+The Figure~\ref{fig:phase_taper} shows phase identification results for full bisection fat-tree,
+In 3-to-1 tapered fat-tree routing, phase-based optimization dynamically adjusts traffic injection rates using threshold-based flow classification and SDN routing to further enhance communication efficiency. The analysis of communication speedup shows notable improvements in random-mixed, stencil-mixed, and nekbone, with random-mixed achieving an 11.13\% increase in performance, surpassing the gains observed in full bisection fat-tree routing. The phase identification mechanism efficiently detects phase transitions and dynamically manages traffic flow to reduce network congestion
 
 \subsection{Evaluation of SDN-based Routing}
 This section evaluates the effectiveness of SDN-based routing approaches across various applications under full bisection fat-tree and 3-to-1 tapered fat-tree configurations of user identification of flows. We analyze performance in terms of communication times.To evaluate the various SDN routing techniques, we kept the communication‑computation phase identification fixed and used the SDN user flow detection method, while varying the SDN routing methods.
 
-\subsubsection{Performance Under Full Fat-Tree}
+\subsubsection{Performance under full bisection fat-tree}
 The Figure ~\ref{fig:routing_full} illustrates the communication speedup achieved by three routing techniques—Adaptive, SDN User, and SDN-Adaptive across various applications under a full fat-tree topology. The y-axis represents the speedup relative to static D-mod-K routing, where higher bars indicate better performance.
 
 
@@ -130,7 +130,7 @@ The Figure ~\ref{fig:flow_dist_full} show the distribution of distribution of fl
 SDN even being a single path routing is kind of making sure that flows are completing together and there is no stragglers left behind. 
 
 
-\subsubsection{Performance Under Tapered Fat-Tree}
+\subsubsection{Performance under 3-to-1 tapered fat-tree}
 
 
 
@@ -142,7 +142,7 @@ SDN even being a single path routing is kind of making sure that flows are compl
 \end{figure}
 
 
-The Figure ~\ref{fig:routing_taper} presents a comparison of routing techniques (Adaptive, SDN User, and SDN-Adaptive Use) across three applications (Random-Permutation, Shift, and Milc) under a Tapered Fat-Tree topology. The y-axis represents the communication speedup relative to DmodK routing, where higher bars indicate better performance. In a Tapered Fat-Tree topology, applications typically experience dense traffic patterns due to limited bandwidth at higher levels caused by tapering. Adaptive routing demonstrates strong performance in balancing network load, especially under traffic-heavy scenarios. However, in Random-Permutation-Third, where traffic is reduced, our evaluation clearly shows that SDN-based routing outperforms adaptive routing. In Shift traffic patterns, where traffic predictability is higher, Adaptive routing effectively balances the load better than static routing, though SDN-based routing still makes slightly better decisions due to its global network awareness. SDN-Adaptive routing leverages the strengths of both Adaptive and SDN-based routing by dynamically adapting to application-specific traffic patterns, selecting the most suitable approach for optimal performance. 
+The Figure ~\ref{fig:routing_taper} presents a comparison of routing techniques (Adaptive, SDN User, and SDN-Adaptive Use) across three applications (Random-Permutation, Shift, and Milc) under a 3-1o-1 tapered fat-tree topology. The y-axis represents the communication speedup relative to DmodK routing, where higher bars indicate better performance. In a tapered fat-tree topology, applications typically experience dense traffic patterns due to limited bandwidth at higher levels caused by tapering. Adaptive routing demonstrates strong performance in balancing network load, especially under traffic-heavy scenarios. However, in Random-Permutation-Third, where traffic is reduced, our evaluation clearly shows that SDN-based routing outperforms adaptive routing. In Shift traffic patterns, where traffic predictability is higher, Adaptive routing effectively balances the load better than static routing, though SDN-based routing still makes slightly better decisions due to its global network awareness. SDN-Adaptive routing leverages the strengths of both Adaptive and SDN-based routing by dynamically adapting to application-specific traffic patterns, selecting the most suitable approach for optimal performance. 
 
 \begin{comment}
 \begin{figure}[t]
