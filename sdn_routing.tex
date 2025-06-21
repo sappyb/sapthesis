@@ -63,7 +63,7 @@ traffic demand, especially when the traffic is dense.
 
 \begin{algorithm}[H]
 \DontPrintSemicolon
-\caption{SDN-greedy algorithm}
+\caption{SDN-greedy routing}
 \label{alg:sdn_greedy}
 \KwInput{Elephant flows in a phase $D$}
 \KwOutput{Routing table $Routing\_table$ for all flows in $D$}
@@ -140,7 +140,7 @@ $\Box$
 Next, we
 will give details of the two steps in the algorithm.
 
-\paragraph{Step 1: Partitioning $D$ into $NL_D$ Permutations.}
+\paragraph{Step 1: Partitioning $D$ into $NL_D$ permutations.}
 Given the traffic demand $D$, the algorithm first constructs a
 bipartite graph \( G = (S, D, E) \), where \( S \) and \( D \) are
 source and destination nodes in $D$, and each edge \( e \in E \) represents
@@ -155,15 +155,14 @@ in $D$ whose degree is less than $NL_D$ and add a dummy edge between the
 two node. This process is repeated until all nodes have $NL_D$ degree. Once
 the $NL_D$-regular multi-bipartite graph is build, 
 the algorithm then applies edge-coloring (via Kőnig’s Theorem)
-to decompose the graph into \( NL_D \) disjoint perfect matchings.
-(XXXXXXXX add citation). Each matching corresponds to a permutation
+to decompose the graph into \( NL_D \) disjoint perfect matchings ~\cite{konig1916graphen}. Each matching corresponds to a permutation
 \( P_1, P_2, ..., P_{NL_D} \). The dummy edge is then removed from the
 obtained permutation to yield the final permutations.
-The algorithm is described in algorithm ~\ref{alg:partition_permutations}
+The algorithm is described in Algorithm ~\ref{alg:partition_permutations}
 
 \begin{algorithm}[H]
 \DontPrintSemicolon
-\caption{Flow Partitioning into Disjoint Permutations}
+\caption{Flow partitioning into disjoint permutations}
 \label{alg:partition_permutations}
 
 \KwInput{Flow set $D$}
@@ -181,12 +180,16 @@ Remove dummy flows from each $P_i$\;
 \KwRet{$P_1, ..., P_k$}
 \end{algorithm}
 
-\paragraph{Step 2: Contention-Free Scheduling for each permutation}  
+\paragraph{Step 2: Contention-free scheduling for each permutation}  
 
-Finding a contention-free scheduling for a permutation on a full-bisection
-fat-tree topology is an extensively studied subject. Many efficient algorithms
-exists \cite{} (XXXXXXX find citation). In our implementation, we use the
-algorithm in XXXXX \cite{}.
+Finding a contention-free schedule for a permutation on a full-bisection
+fat-tree topology has been investigated for more than two decades, and a
+number of efficient algorithms are now available\,%
+\cite{Paull1962,Rodriguez2009,Zahavi2010,Prisacari2013}.  In this work, I
+represent the permutation with a connection
+matrix,\cite{Paull1962} and apply the coloured-matrix algorithm of
+Rodríguez \emph{et al.}\,\cite{Rodriguez2009}, thereby ensuring that each
+permutation is routed without link contention.
 
 \subsubsection{SDN-optimal for Tapered Fat-Trees}
 
@@ -208,19 +211,19 @@ sub-permutation, contention-free routing is still possible using
 the techniques previously employed.
 
 Our goal is to make sure that we create sub-permuatations by
-selects flows in such a way that the links in between each
+selecting flows in such a way that the links in between each
 fat-tree layers have no contention and has the maximum utilization. 
 To construct these sub-permutations, the algorithm first selects
-flows that traverse the core layer—typically inter-pod flows that consume both leaf-to-aggregate and aggregate-to-core links. It continues selecting such flows until all available core-level links are utilized. At this point, adding more inter-pod flows would introduce contention. The algorithm then fills the remaining capacity at the aggregation layer by selecting intra-pod flows, which consume only leaf-to-aggregate and aggregate-to-leaf links. The result is a sub-permutation that fully utilizes available link resources without exceeding capacity at any layer. This allows Hall’s Marriage Theorem to be applied to guarantee a conflict-free routing for each sub-permutation.
+flows that traverse the core layer, typically inter-pod flows that consume both leaf-to-aggregate and aggregate-to-core links. It continues selecting such flows until all available core-level links are utilized. At this point, adding more inter-pod flows would introduce contention. The algorithm then fills the remaining capacity at the aggregation layer by selecting intra-pod flows, which consume only leaf-to-aggregate and aggregate-to-leaf links. The result is a sub-permutation that fully utilizes available link resources without exceeding capacity at any layer. This allows Hall’s Marriage Theorem \cite{cameron2025hall} \cite{hall1987representatives} to be applied to guarantee a conflict-free routing for each sub-permutation.
 
 \begin{algorithm}[H]
-\caption{Sub-Permutation Construction Using Core and Aggregate Link Counters}
+\caption{Sub-permutation construction}
 \label{alg:sub_permutation}
 \KwIn{
-    $F_{\text{core}}$: set of flows that traverse the core switch\\
-    $F_{\text{agg}}$: set of flows that only traverse the aggregate switch\\
-    $c$: number of available core-to-aggregate links per sub-permutation\\
-    $a$: number of available aggregate-to-leaf links per sub-permutation
+    $F_{\text{core}}$: Set of flows that traverse the core switch\\
+    $F_{\text{agg}}$: Set of flows that only traverse the aggregate switch\\
+    $c$: Number of available core-to-aggregate links per sub-permutation\\
+    $a$: Number of available aggregate-to-leaf links per sub-permutation
 }
 \KwOut{
     $P_{\text{list}}$: list of sub-permutations

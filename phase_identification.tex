@@ -102,14 +102,14 @@ for the application in previous phases are released.
 \caption{Dynamic phase identification algorithm}
 \label{alg:phase_detection}
 
-Let total\_data be all data sent by the application in the current interval\;
-    \If{($Data\_sent > threshold$)}{
-        current phase is a communication phase\;
+Let Total\_data be all data sent by the application in the current interval\;
+    \If{($Total\_data > Threshold$)}{
+        Current phase is a communication phase\;
     }
     \Else{
-      current phase is a computation phase\;
-      \If {(the previous phase is a communication phase)} {
-        release resouces allocated in previous phases
+      Current phase is a computation phase\;
+      \If {(The previous phase is a communication phase)} {
+        Release resouces allocated in previous phases
         }
     }
 
