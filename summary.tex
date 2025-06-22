@@ -3,19 +3,19 @@ communication patterns are distinguished by repetitive compute-and-communicate
 phases. Central to the study was an extensive TraceR-CODES simulation that
 examined three interlocking SDN control-plane mechanisms—flow identification,
 phase identification, and flow scheduling—across two representative
-interconnects: a 1 024-node full-bisection fat-tree and a 1 536-node 3-to-1
+interconnects: a 1024-node full-bisection fat-tree and a 1536-node 3-to-1
 tapered fat-tree. The study first demonstrated that early, user-based flow
 classification delivers the greatest performance gains, while a
 deep-neural-network classifier offers an accurate, low-latency alternative and a
 threshold scheme provides a baseline. It then revealed that distinguishing
 computation from communication phases allows the network to quickly release
-resources, reducing worst-link congestion by approximately eight percent in full
-fat-trees and eleven percent in tapered counterparts. Finally, the evaluation of
+resources, reducing worst-link congestion by in both full
+fat-trees and tapered counterparts. Finally, the evaluation of
 three SDN-based routing algorithms—SDN-greedy, SDN-optimal, and a hybrid
 SDN-adaptive strategy—showed that SDN-optimal minimizes maximal link load and
 outperforms conventional adaptive routing when traffic density is low, whereas
 SDN-adaptive dynamically shifts between optimal and adaptive behavior, achieving
-up to six- to seven-fold reductions in communication time under
+up to six to seven fold reductions in communication time under
 bandwidth-constrained conditions, specifically in tapered fat-trees.
 Collectively, these findings advance a holistic perspective in which rapid flow
 classification, phase-aware resource reclamation, and traffic-aware routing are
