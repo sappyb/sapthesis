@@ -2,9 +2,9 @@ Data centers and HPC systems differ significantly in terms of their traffic char
 in HPC environments. To effectively support SDN in the HPC environment,
 novel techniques that take HPC communication characteristics into
 consideration are proposed. Since a significant portion of
-communications in HPC applications are static, we propose to have an API for
+communications in HPC applications are static, I propose to have an API for
 applications to provide flow information to the network directly. For
-dynamic communications, we develop a machine learning based approach for
+dynamic communications, I develop a machine learning based approach for
 flow identification.
 
 Figure~\ref{fig:flow_schemes} shows the high-level view of the proposed
@@ -21,7 +21,7 @@ such flows based on user information.
 \begin{figure}[h]
 \centering
     \includegraphics[width=0.8\columnwidth]{figs/Fig3.png}
-\caption{High-level view of our flow classification schemes}
+\caption{High-level view of my flow classification schemes}
   \label{fig:flow_schemes}
 \end{figure}
 
@@ -34,7 +34,7 @@ Existing flow classification methods including end host-based
 management~\cite{xu2015identifying},
 packet sampling~\cite{suh2014opensample}~\cite{afek2015sampling},
 and polling per-flow statistics~\cite{yang2020flow}, do not assume
-the type of applications. In this work, we compare our proposed techniques with
+the type of applications. In this work, I compare my proposed techniques with
 the classic elephant flow detection using a polling-based approach,
 which is based on Hedera's architecture \cite{al2010hedera}.
 Hedera's control loop comprises
@@ -52,20 +52,20 @@ However, in the HPC environment, depending
 on applications, the time for each iteration may be much less than a second.
 Hence, these existing flow classification schemes will miss many iterations
 of application execution and not effective for such HPC applications.
-To perform flow classification effectively for HPC systems, we develop
+To perform flow classification effectively for HPC systems, I develop
 a machine learning based approach using deep neural network (DNN)
 for flow classification.
 
 \vspace{0.08in}
 \noindent{\bf Deep learning-based scheme}:
 As mentioned earlier, communications in HPC applications exhibits phase
-behavior. If such behavior can be characterized and learned, we can classify
+behavior. If such behavior can be characterized and learned, I can classify
 the flows quicker (after a small number of phases).
 The information to differentiate between large elephant flows from
 small mice flows is fundamentally captured by the time sequence of packets.
 By training a Deep Neural Network (DNN) model using the time sequence of
 packets from HPC workloads, the DNN model is able to recognize the
-patterns of elephant flows in HPC applications. We note that the patterns
+patterns of elephant flows in HPC applications. I note that the patterns
 learned by the DNN model goes beyond simple statistics like
 the existing threshold-based scheme: the model can also reflect more
 sophisticated patterns such as the phased behavior. 
@@ -73,7 +73,7 @@ sophisticated patterns such as the phased behavior.
 
 \vspace{0.08in}
 \noindent{\em Model architecture}:
-Our DNN model consists of an input layer of size 300 to accept the input data
+My DNN model consists of an input layer of size 300 to accept the input data
 which consists of data sent across various intervals of time and a single dense layer with
 one output neuron, which uses the sigmoid activation function to classify the flows as elephants or mice.
 The sigmoid function is commonly used for binary classification tasks
@@ -87,7 +87,7 @@ classification tasks.
 
 \vspace{0.08in}
 \noindent{\em Data collection and model training}:
-We utilized the TraceR-CODES simulator to execute representative HPC 
+I utilized the TraceR-CODES simulator to execute representative HPC 
 workloads, namely Random-Permutation, Shift-256, Stencil3d, Stencil4d, Milc, Nekbone, Subcom3d-a2a, Kripke ~\cite{kripke}, Laghos, 
 SW4lite ~\cite{sjogreen2018sw4}, and AMG ~\cite{amg}, 
 for ranks ranging from 32 to 512. More detailed description of these
@@ -100,7 +100,7 @@ model. For training purposes, the flows are marked as elephant or
 mouse flows with a cut-off of $3 * 10^8$ bytes of data transfer in 90 seconds: 
 Elephant flows were those transferring more than 300 MB of data in
 90 seconds, while mouse flows were 
-those transferring less. We employed a min-max scalar to scale the flow data 
+those transferring less. I employed a min-max scalar to scale the flow data 
 before inputting it into the dense neural network layer for forecasting. The 
 developed model was used offline to forecast network flows of elephants
 or mice for systems running a combination of the aforementioned
@@ -111,27 +111,27 @@ corresponding binary labels. The total data is split as follows 20\%
 of the training data is used for validation, while the remaining 80\% is 
 used for training. Table~\ref{tab:model_acc} shows the model prediction
 accuracy: the model prediction accuracy is very high for the data. 
-We first trained the model on the applications which we are going to use for our simulations and 
-see how it performed which are Random-Permutation, Shift-256, Stencil3d, Stencil4d, Milc, Nekbone and later on we added Subcom3d-a2a, Kripke , Laghos, SW4lite, and AMG for training to see if the model is able to handle the new data, along with the existing data and still provide a accurate prediction. We do this to make sure that our model is capable of getting  updated with new traffic as an when it comes. 
+I first trained the model on the applications which I are going to use for my simulations and 
+see how it performed which are Random-Permutation, Shift-256, Stencil3d, Stencil4d, Milc, Nekbone and later on I added Subcom3d-a2a, Kripke , Laghos, SW4lite, and AMG for training to see if the model is able to handle the new data, along with the existing data and still provide a accurate prediction. I do this to make sure that my model is capable of getting  updated with new traffic as an when it comes. 
 
 \begin{comment}
 \paragraph{Model Offline Prediction}				
-We conducted a study on three workloads generated by randomly selecting 
+I conducted a study on three workloads generated by randomly selecting 
 applications from Stencil4d, Subcom3d-a2a, Kripke, Laghos, AMG,
 and SW4lite for  
 ranks 32, 64, 128, 256, and 512. The TraceR-CODES simulator was used to 
 simulate the corresponding workloads, and the flow data was collected.
-The network flows that we gathered 
+The network flows that I gathered 
 for the workload were predicted using the model. 
 
 To validate the model's ability to forecast elephants and mice for any 
-applications, we tested the model on unknown data. The model was employed to 
+applications, I tested the model on unknown data. The model was employed to 
 forecast the network flows of the application while it was operated 
 individually and as a workload, and in each case, the model accurately 
 predicted the flows by more than 95\%. The data used for making the 
 predictions are presented in the table below.
 
-Overall, our study demonstrates the effectiveness of the proposed neural 
+Overall, my study demonstrates the effectiveness of the proposed neural 
 network model for accurately predicting network flows of elephant and mice for 
 various applications, which can assist in improving the performance of HPC 
 systems.

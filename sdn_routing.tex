@@ -1,6 +1,6 @@
 The SDN controller has the information of the traffic in
 the network. It then uses the traffic information and network information
-to schedule the traffic. We call the scheduling algorithm {\em SDN-based
+to schedule the traffic. I call the scheduling algorithm {\em SDN-based
 routing}. Clearly, SDN-based routing can be different
 for different network topologies and is constrained by the underlying
 network routing mechanism such as single-path routing or adaptive routing. 
@@ -8,8 +8,8 @@ In this work, I develop SDN-based routing for both full-bisection bandwidth
 fat-trees and tapered fat-trees, with support for single-path as well as
 adaptive routing.
 
-We consider routing (scheduling) elephant flows that are long-lived
-and bandwidth-intensive. In the discussion, we will
+I consider routing (scheduling) elephant flows that are long-lived
+and bandwidth-intensive. In the discussion, I will
 model the system as a directed
 graph \( G = (V=S\cup N, E) \), where $N$ is the set of compute nodes,
 $S$ is the set of switches, and $V$ is the set of switches ($S$) and
@@ -20,7 +20,7 @@ $f_i = (s_i, d_i)$, where $s_i, d_i \in N$.
 \[D = \{f_1=(s_1, d_1), f_2=(s_2, d_2), ..., f_n = (s_n, d_n)\}\] 
 
 Given a traffic demand $D$, the objective of an SDN-based routing scheme is to
-achieve load balancing. In the following, we will first present our SDN-based
+achieve load balancing. In the following, I will first present my SDN-based
 routing for networks with single path routing and then discuss the
 scheme for networks with adaptive routing.
 
@@ -29,7 +29,7 @@ scheme for networks with adaptive routing.
 For single-path routing, all packets of a flow
 follow the same path. For a traffic demand
 $D = \{f_1=(s_1, d_1), f_2=(s_2, d_2), ..., f_n = (s_n, d_n)\}$, 
-we will denote the path for flow $f_i$ to be $p_i$, which consists of a set
+I will denote the path for flow $f_i$ to be $p_i$, which consists of a set
 of directed links. For a given routing $R$,
 let $L_l$ be the set of flows that are routed through link $l$.
 The load of the link $l$ is the number of flows using the link ($|S_l|$).
@@ -39,8 +39,8 @@ load. The load of the network for traffic demand $D$
 is the maximum of loads among all links:
 \[L_D = \max_{l\in E} {|S_l|}\]
 
-The design objective of our SDN-based single-path routing schemes is to
-minimize $L_D$ for traffic demand $D$. Our first algorithm,
+The design objective of my SDN-based single-path routing schemes is to
+minimize $L_D$ for traffic demand $D$. My first algorithm,
 \textit{SDN-greedy}, is a heuristic algorithm while the second algorithm,
 \textit{SDN-optimal}, is optimal for full-bisection fat trees. 
 
@@ -89,21 +89,21 @@ While \textit{SDN-greedy} spreads the flows to paths with minimum path
 loads in a greedy manner, and does not guarantee to achieve optimal $L_D$ for
 a given set of elephant flows, \textit{SDN-optimal} considers the set of flows
 as a whole and achieves optimal $L_D$ for full-bisection fat trees.
-In the following, we will first describe SDN-optimal for full-bisection fat
-trees. After that we will discuss how to extend it for tapered fat trees. 
+In the following, I will first describe SDN-optimal for full-bisection fat
+trees. After that I will discuss how to extend it for tapered fat trees. 
 
 Given traffic demand
-$D = \{f_1=(s_1, d_1), f_2=(s_2, d_2), ..., f_n = (s_n, d_n)\}$, we define
+$D = \{f_1=(s_1, d_1), f_2=(s_2, d_2), ..., f_n = (s_n, d_n)\}$, I define
 $SRC_{s\in N} = \{f_i = (s_i, d_i) | s_i = s\}$ and $DST_{d\in N} =
 \{f_i = (s_i, d_i) | d_i = s\}$.  $SRC_s$ is the set of flows in $D$ whose
 source node is $s$ and $DST_d$ is the set of flows in $D$ whose destination
-node is $d$. We define the node load for a given $D$ as 
+node is $d$. I define the node load for a given $D$ as 
 \[NL_D = \max(\max_{s \in N} \{|SRC_s|\}, \max_{d \in N} \{|DST_d|\})\]
 
 The node load for a traffic demand is either the maximum number of flows
 coming from the same source or the maximum number of flows going to
 the same destination in the traffic demand. In a fat tree topology, since
-each compute node connects to one link to a switch, we have the following
+each compute node connects to one link to a switch, I have the following
 theory.
 
 {\bf Theorem 1}: For a fat-tree topology and a given traffic demand $D$,
@@ -137,7 +137,7 @@ theorem summarizes this discussion.
 \textit{SDN-optimal} is optimal for the full bisection fat tree. 
 $\Box$
 
-Next, we
+Next, I
 will give details of the two steps in the algorithm.
 
 \paragraph{Step 1: Partitioning $D$ into $NL_D$ permutations.}
@@ -147,10 +147,10 @@ source and destination nodes in $D$, and each edge \( e \in E \) represents
 a flow: if $(s, d) \in D$, then there is an edge from $s\in S$ to $d\in D$. 
 This initial bipartite graph is then augmented to be a $NL_D$-regular
 multi-bipartite graph by adding dummy nodes and edges. Multi-bipartite graph
-allows multiple edges between two nodes. We first add dummy nodes such that
-$|S|$ is the same as $|D|$. After that, we add dummy edges to make each node
+allows multiple edges between two nodes. I first add dummy nodes such that
+$|S|$ is the same as $|D|$. After that, I add dummy edges to make each node
 in $S$ has a degree of $NL_D$ and each node in $D$ has a degree of $NL_D$.
-For each node in $|S|$, if its degree is less than $NL_D$, we find a node
+For each node in $|S|$, if its degree is less than $NL_D$, I find a node
 in $D$ whose degree is less than $NL_D$ and add a dummy edge between the
 two node. This process is repeated until all nodes have $NL_D$ degree. Once
 the $NL_D$-regular multi-bipartite graph is build, 
@@ -210,7 +210,7 @@ available links at that layer. This ensures that within each
 sub-permutation, contention-free routing is still possible using
 the techniques previously employed.
 
-Our goal is to make sure that we create sub-permuatations by
+My goal is to make sure that I create sub-permuatations by
 selecting flows in such a way that the links in between each
 fat-tree layers have no contention and has the maximum utilization. 
 To construct these sub-permutations, the algorithm first selects

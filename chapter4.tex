@@ -27,7 +27,7 @@ to the application developers or can be analyzed statically or dynamically
 in HPC applications and systems will allow SDN to support
 communications more effectively and to perform its tasks more efficiently.
 
-In this work, we develop techniques to adapt SDN to HPC workloads and systems,
+In this work, I develop techniques to adapt SDN to HPC workloads and systems,
 taking HPC application characteristics into account. The techniques
 include flow identification, phase identification, and flow scheduling.
 Flow identification identifies the types of flows
@@ -36,10 +36,10 @@ for  an SDN-capable network to achieve high performance.
 Phase identification identifies communication phases in applications, which
 allows network resources to be utilized more effectively. Flow scheduling
 schedules the communication to achieve target optimization objectives.
-To maximize the effectiveness, our techniques treat
+To maximize the effectiveness, my techniques treat
 static and dynamic communications in HPC applications differently.
 Dynamic communications are handled using techniques similar to those
-in the traditional SDN networks. For static communications, we propose
+in the traditional SDN networks. For static communications, I propose
 to enhance SDN with an API for HPC applications
 to give hints to the SDN system (e.g. whether a flow is an elephant flow
 or will likely be an elephant flow). For such communications,
@@ -48,28 +48,28 @@ information. This is similar to the intent-based API \cite{Coflow2012}
 where application developer and the network system work
 together for flow and phase identification.
 
-We conducted extensive simulation experiments using the
+I conducted extensive simulation experiments using the
 TraceR-CODES
 \cite{jain2016evaluating,mubarak2016enabling,jain2017predicting}
 PDES ~\cite{fujimoto1990parallel} simulator on a 3-level
-fat-tree topology ~\cite{leiserson1985fat} ~\cite{al2008scalable}. Our
-simulation results reveal that our techniques improve the performance
+fat-tree topology ~\cite{leiserson1985fat} ~\cite{al2008scalable}. My
+simulation results reveal that my techniques improve the performance
 over the existing SDN
 scheme for applications with both static and dynamic communications.
 %For example, for the static Stencil4d benchmark with the near neighbor
-%communications, our technique improves the performance by around XXXXXX\%.
+%communications, my technique improves the performance by around XXXXXX\%.
 %For the dynamic Milc benchmark where multiple patterns are
-%performed in different iterations, our technique improves over
+%performed in different iterations, my technique improves over
 %existing SDN scheme by XXXXXX\% on average across all three
 %fat-tree topologies.
 The main contributions of this work include the following:
 %
 \begin{itemize}
-\item We identify the features in HPC applications that can be used
+\item I identify the features in HPC applications that can be used
   to enhance the effectiveness of SDN.
-\item We develop techniques to adapt SDN to HPC applications and
+\item I develop techniques to adapt SDN to HPC applications and
   systems by exploiting the identified HPC features.
-\item We perform extensive simulation to evaluate and validate
+\item I perform extensive simulation to evaluate and validate
   the proposed techniques.
 \end{itemize}
 

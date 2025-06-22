@@ -20,7 +20,7 @@ Now, the communication pattern may be different in the two
 communication phases in the given code as the comm world is calculated
 at runtime. Being able to reuse network resources in different phases will
 significantly improve network resource utilization. 
-We propose to have an API for HPC application to give
+I propose to have an API for HPC application to give
 information about phases. With the API, the user can insert a marker before
 and after each communication
 phase in the program to inform the network the starting and
@@ -61,7 +61,7 @@ for tightly coupled HPC applications whose phases can change in
 subseconds or even submilliseconds. 
 \end{comment}
 
-%In this section we will talk about the phases of 
+%In this section I will talk about the phases of 
 %HPC application and how to detect them during application runtime.
 
 \subsection{Dynamic communication phase identification}
@@ -85,8 +85,8 @@ prediction.
 Without the hints from application, communication phases in an HPC
 application can be detected by finding the computation period in the
 application when very few communications are performed. 
-Our dynamic communication phase identification algorithm
-is shown in Figure~\ref{alg:phase_detection}. We first decide the interval
+My dynamic communication phase identification algorithm
+is shown in Figure~\ref{alg:phase_detection}. I first decide the interval
 value for a minimal computation phase (e.g. 100ms). The phase detection
 algorithm is executed periodically at the interval boundary to determine
 whether phase is a communication phase or a computation phase depending
