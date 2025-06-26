@@ -196,13 +196,13 @@ Two practical variants UGAL are:
 \emph{UGAL-G} which assumes perfect, system-wide knowledge of queue occupancies and is
 used mainly as an upper-bound benchmark.
 \emph{UGAL-L}, which relies only on local queue occupancy information at the the source
-router.  
+router~\cite{kim2008technology}.  
 Let $q_m$ and $q_{nm}$ denote the output-queue occupancies of the first link on
 the minimal and non-minimal paths, and let $H_m$ and $H_{nm}$ be the respective
-hop counts ($3$ and $5$ in a dragonfly).  
+hop counts.  
 UGAL-L approximates the latency of each path as the product of these two
 quantities and introduces a bias~$b$ that tilts the decision toward MIN path or
-the VLB path.  
+the VLB path~\cite{kim2008technology}.  
 A packet is routed minimally only if
 \[
   q_m \times H_m \;\le\; q_{nm} \times H_{nm} + b,
