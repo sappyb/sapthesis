@@ -44,7 +44,7 @@ Figure ~\ref{fig:ftree_ex} shows a example of a three level fat-tree.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.8\columnwidth]{./figs/ftree_ex.png}
-  \caption{A three level fat-tree with core, aggregate, leaf switch levels and pods.}
+  \caption{A three level fat-tree with core, aggregate, leaf switch levels and pods}
   \label{fig:ftree_ex}
 \end{figure} 
 
@@ -141,7 +141,7 @@ interconnection networks, offering both cost-effectiveness and scalability.
 
 \section{Routing}
 
-Routing in determines how data packets, which are units of data transmitted over a network, travel from a source to an destination within a network. Each data packet contains information such as the source address, destination address, and the actual data being transmitted. These packets are sent from a source node to a destination node, with each node being connected to a switch. The source switch connects to the source node, while the destination switch connects to the destination node. It involves mapping network flows to specific paths for data transmission, a process influenced by the network's underlying topology. The efficiency of routing directly impacts the performance of applications in HPC and data center systems, making it a crucial aspect of interconnect modeling.
+Routing in an interconnect topology determines how data packets, which are units of data transmitted over a network, travel from a source to an destination within a network. Each data packet contains information such as the source address, destination address, and the actual data being transmitted. These packets are sent from a source node to a destination node, with each node being connected to a switch. The source switch connects to the source node, while the destination switch connects to the destination node. It involves mapping network flows to specific paths for data transmission; a process influenced by the network's underlying topology. The efficiency of routing directly impacts the performance of applications in HPC and data center systems, making it a crucial aspect of interconnect modeling.
 Routing in interconnect networks can be classified into three broad categories: when the routing decision is taken, how the path is selected, and where the decision is taken~\cite{scheideler2006universal, dally2004principles}. In terms of the timing at which the routing decision is made, there are offline schemes and online schemes; offline schemes establish routes statically during system configuration, whereas online schemes compute routes at runtime to mitigate congestion. In terms of path selection, there are deterministic routing, oblivious routing, and adaptive routing. Deterministic routing assigns a single, immutable path to each source–destination node pair; oblivious routing chooses among multiple paths without considering current network conditions; and adaptive routing uses real-time network indicators such as queue occupancy or link utilisation to select a path from a set of paths. Finally, in terms of the location at which the decision is made, there are source routing and distributed routing. In source routing, the entire path is encoded in the packet header at the source node, whereas in distributed routing each intermediate node along the path makes routing decisions based on local routing tables or forwarding rules.
 These routing strategies play a vital role in ensuring efficient data transmission in HPC and data center environments.
 
@@ -300,7 +300,7 @@ Software Defined Network(SDN) is a modern networking scheme where, the organizat
 \end{itemize}
 
 While the traditional networking architecture with tightly coupled control and data planes has been successful in ensuring network resilience, it also poses several limitations. One of the primary challenges is the complexity and rigidity of the architecture, which makes it difficult to introduce innovations and adapt to changing network requirements. Additionally, the decentralized nature of the control plane makes it challenging to achieve a holistic view of the network, hindering effective management and optimization.
-To address these limitations and enable greater flexibility and agility in network management, the concept of Software-Defined Networking (SDN) has emerged as a promising approach. SDN decouples the control plane from the data plane, allowing for centralized management and programmability of the network. In an SDN architecture, the control logic is moved to a centralized entity known as the controller or Network Operating System (NOS), which maintains a global view of the network and is responsible for configuring forwarding policies.
+To address these limitations and enable greater flexibility and agility in network management, the concept of Software Defined Networking (SDN) has emerged as a promising approach. SDN decouples the control plane from the data plane, allowing for centralized management and programmability of the network. In an SDN architecture, the control logic is moved to a centralized entity known as the controller or Network Operating System (NOS), which maintains a global view of the network and is responsible for configuring forwarding policies.
 
 The key components of an SDN architecture include the following:
 
@@ -343,10 +343,23 @@ communications.
 
 \clearpage
 \section{Related Works}
-In my dissertation, I focusing on two areas, optimizing hardware parameters for GPU-based HPC platforms 
-and incorporating Software Defined Networking (SDN) techniques to improve HPC application performance.
+This dissertation focuses on two areas, incorporating Software Defined Networking (SDN) techniques to improve HPC application performance and optimizing hardware parameters for GPU-based HPC platforms.
 
-In the first section, I explore the optimization of hardware parameters 
+In the first section, I analyze the integration of SDN techniques in HPC environments.
+My work evaluates how network flow classification, phase identification, and SDN-based routing compare with the traditional routing used in fat-tree topologies; it also tries to adapt these techniques for tapered fat-trees, aiming to determine whether incorporating SDN techniques helps run HPC applications efficiently on an HPC system.
+Although SDN is successful in other domains, it has not been fully explored in HPC. 
+Studies by Faizian et al. have looked at SDN and adaptive routing in 
+dragonfly topologies, providing a foundation for my work~\cite{faizian2017comparative}.
+Since the introduction of SDN and OpenFlow~\cite{openflow}, the technology has gained acceptance in 
+industry and academia. Extensive research has explored SDN capabilities in the HPC domain. 
+Arap investigated techniques for efficient MPI collective communications using SDN~\cite{arap2014software}, 
+while Takahashi evaluated the performance of the MPI\_Allreduce operation on an SDN cluster~\cite{takahashi2014performance}. 
+Additionally, MPI\_Reduce operations on SDN clusters have been developed, 
+and efforts are underway to build new MPI libraries that 
+take advantage of SDN capabilities. These studies show the potential of SDN to 
+improve communication efficiency in HPC environments~\cite{munkhdorj2015design, takahashi2015concept}.
+
+In the second section, I explore the optimization of hardware parameters 
 for next-generation GPU-based HPC platforms. Inspired by Jain et al.'s work on fat-tree configurations~\cite{jain2017predicting} 
 and studies on dragonfly and jellyfish topologies by Rahman et al.~\cite{rahman2019topology} and Zaid et al.~\cite{alzaid2021multi}, I investigate how different hardware parameters affect network performance through system wide simulation.
 Simulations are crucial for evaluating HPC network performance. 
@@ -366,19 +379,4 @@ This aims to address how to strike a balance between computation
 and communication capacities by changing the hardware parameters
 as HPC systems evolve towards fewer, more powerful nodes.
 
-In the second section, I analyze the integration of SDN techniques in HPC environments.
-My work evaluates how network flow classification, phase identification, and SDN-based routing compare with the traditional routing used in fat-tree topologies; it also tries to adapt these techniques for tapered fat-trees, aiming to determine whether incorporating SDN techniques helps run HPC applications efficiently on an HPC system.
-Although SDN is successful in other domains, it has not been fully explored in HPC. 
-Studies by Faizian et al. have looked at SDN and adaptive routing in 
-dragonfly topologies, providing a foundation for my work~\cite{faizian2017comparative}.
-Since the introduction of SDN and OpenFlow~\cite{openflow}, the technology has gained acceptance in 
-industry and academia. Extensive research has explored SDN capabilities in the HPC domain. 
-Arap investigated techniques for efficient MPI collective communications using SDN~\cite{arap2014software}, 
-while Takahashi evaluated the performance of the MPI\_Allreduce operation on an SDN cluster~\cite{takahashi2014performance}. 
-Additionally, MPI\_Reduce operations on SDN clusters have been developed, 
-and efforts are underway to build new MPI libraries that 
-take advantage of SDN capabilities. These studies show the potential of SDN to 
-improve communication efficiency in HPC environments~\cite{munkhdorj2015design, takahashi2015concept}.
-
-In summary, my research optimizes HPC platforms by bridging the gap between 
-computational capacity and communication efficiency and integrating advanced networking paradigms like SDN. 
+In summary, my research optimizes HPC platforms by integrating advanced networking paradigms like SDN and bridges the gap between computational capacity and communication efficiency through network-parameter analysis.

@@ -1,6 +1,28 @@
 \chapter{Introduction}
 
-Large-scale systems aiming to achieve over 1 Exaflop/s of sustained performance have been built. Unlike the systems dominating the HPC industry
+Software Defined Networking (SDN) \cite{kreutz2014software} has emerged as a promising technology and
+has been widely implemented across various network environments, including data
+centers, campus networks, and wide-area networks. SDN offers several notable
+features: (1) a centralized global network view for intelligent traffic and
+resource management, (2) flexible per-flow management to accommodate varying
+network traffic patterns, (3) network monitoring capabilities providing valuable
+traffic statistics, and (4) ease of integrating new network functionalities and
+services. These features empower SDN to effectively manage traffic at the flow
+level using a centralized view and optimize network resource utilization for
+improved performance compared to traditional networking infrastructures \cite{tr2016sdn}.
+While these SDN capabilities hold appeal for High-Performance Computing (HPC)
+systems and applications, SDN adoption within the HPC domain remains limited.
+One reason for this is the absence of clear evidence demonstrating SDN's
+superiority over existing networking technologies in high-end HPC systems that
+employ sophisticated routing schemes. Existing SDN methodologies are primarily
+tailored for internet and data-parallel applications like Hadoop and MapReduce
+applications \cite{he2016firebird}, which have communication characteristics different from those
+of HPC applications. Consequently, to achieve optimal performance on SDN-based
+HPC systems, novel techniques that consider the unique communication patterns of HPC
+applications are of utmost importance. 
+
+Large-scale systems aiming to achieve over 1 Exaflop/s of sustained performance have been built.
+ Unlike the systems dominating the HPC industry
 a decade ago, many of today's and future systems consist of a relatively modest
 number of nodes. For instance, Sequoia at LLNL \cite{sequa}, the fastest supercomputer in
 the Top500 list in 2012, utilized 96K nodes to achieve 20 Petaflop/s of peak
@@ -23,66 +45,20 @@ computing capability, outperforms a system comprising more nodes, each with
 lesser computing capability. 
 
 
-Software Defined Networking (SDN) \cite{kreutz2014software} has emerged as a promising technology and
-has been widely implemented across various network environments, including data
-centers, campus networks, and wide-area networks. SDN offers several notable
-features: (1) a centralized global network view for intelligent traffic and
-resource management, (2) flexible per-flow management to accommodate varying
-network traffic patterns, (3) network monitoring capabilities providing valuable
-traffic statistics, and (4) ease of integrating new network functionalities and
-services. These features empower SDN to effectively manage traffic at the flow
-level using a centralized view and optimize network resource utilization for
-improved performance compared to traditional networking infrastructures \cite{tr2016sdn}.
-
-While these SDN capabilities hold appeal for High-Performance Computing (HPC)
-systems and applications, SDN adoption within the HPC domain remains limited.
-One reason for this is the absence of clear evidence demonstrating SDN's
-superiority over existing networking technologies in high-end HPC systems that
-employ sophisticated routing schemes. Existing SDN methodologies are primarily
-tailored for internet and data-parallel applications like Hadoop and map-reduce
-applications \cite{he2016firebird}, which have communication characteristics different from those
-of HPC applications. Consequently, to achieve optimal performance on SDN-based
-HPC systems, novel techniques that consider the unique communication patterns of HPC
-applications are of utmost importance. 
-
-\begin{comment}
-Many HPC applications involve simulating physical
-processes across numerous time steps, where each step entails similar tasks.
-This results in phased behavior characterized by alternating computation and
-communication phases often
-repeating across different time steps and being static, as known to application
-developers \cite{faraj2002communication} \cite{hong2013achieving}. Leveraging such static communication information can enhance
-SDN's ability to support communications effectively and perform tasks
-efficiently. Considering these characteristics, I develop SDN techniques
-tailored for HPC systems. Flow identification plays a crucial role in this
-process, as accurately classifying flows is essential for achieving high
-performance in an SDN-capable network. 
-
-The focus of this work lies particularly on
-identifying elephant flows \cite{he2016firebird}, which are flows with substantial data volumes,
-as they typically dominate communication time in HPC applications. Subsequently,
-we devise SDN-enhanced routing functions to adeptly schedule these elephant
-flows and allocate optimal network resources. Building upon the first part of the work done 
-on optimal system configurations, we will evaluate these new algorithms across
-various interconnect topologies.  Such evaluations hold significant implications
-for scientific computing, enabling researchers to harness the full potential of
-HPC resources for groundbreaking discoveries across various fields.
-\end{comment}
-
 My dissertation research primarily focuses on the following two areas:
 
 \begin{enumerate} 
-\item Understanding the performance implication of technology shifts.
-I am using end-to-end system simulations to explore the
-performance impact of various network design and parameter choices for
-GPU-based systems,
-conducting a sensitivity study of the overall performance with respect to
- change in these parameters.  
-\item Developing and evaluating SDN techniques for HPC systems/applications.
+\item Developing and evaluating SDN techniques for HPC systems.
 I am investigating the influence of SDN on HPC
 environments, whether SDN can improve the communication performance for HPC
 systems, and whether our proposed techniques result in higher communication
 performance in SDN-capable interconnect topologies than existing schemes.
+\item Exploring the performance of modern HPC systems across diverse network onfigurations.
+I am using end-to-end system simulations to explore the
+performance impact of various network design and parameter choices for
+GPU-based systems,
+conducting a sensitivity study of the overall performance with respect to
+ changes in these parameters.  
 \end{enumerate} 
 
 
@@ -90,10 +66,8 @@ performance in SDN-capable interconnect topologies than existing schemes.
 The structure of this dissertation aligns with the outlined research
 objectives.
 Chapter 2 will provide a background on interconnection technologies, 
-SDN fundamentals and related works. In chapter 3, I will examine the
-influence of network parameters on modern HPC systems. Chapter 4 will
-delve into
-the implementation of SDN enhancements within HPC environments and evaluate
-their impact on application performance. Finally, chapter 5 will offer
+SDN fundamentals and related works. 
+In Chapter 3, I describe the implementation of various SDN-based enhancements in HPC environments and evaluate their impact on application performance. Chapter 4 examines how key network parameters influence modern HPC systems.
+Finally, chapter 5 will offer
 concluding remarks.
 
