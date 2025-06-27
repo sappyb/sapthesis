@@ -7,7 +7,7 @@ in detail in Chapter 2.
 
 \item \textbf{Stencil mixed}: This application combines a \texttt{Stencil3d} phase followed by a \texttt{Stencil4d} phase, with an intermediate computation phase of 100ms. The transition between patterns allows evaluation of the routing system’s responsiveness to changes in spatial communication demands.
 
-\item \textbf{Random permutation third}: In 3-to-1 tapered fat-tree there are a 3 flows which contends for one uplink. To have a complete no contention scenerio, we used this traffic pattern where we only selected one third of the flows that are originally present in a random-permuatation traffic.
+\item \textbf{Random permutation third}: In 3-to-1 tapered fat-tree there are a three flows which contends for one uplink. To have a complete no contention scenario, we used this traffic pattern where we only selected one third of the flows that are originally present in a random-permutation traffic.
 \end{itemize}
 
 To ensure accurate analysis of communication computation transitions in the Random permutation mixed and Stencil mixed, I enforce
@@ -17,7 +17,7 @@ preventing overlap and allowing isolated assessment of routing behavior across p
 
 For the stencil applications, the problem dimensions are defined based on spatial decomposition across processing nodes. With 1024 nodes, the Stencil3D application is partitioned into a 3D grid of 8 nodes along the x-axis, 8 along the y-axis, and 16 along the z-axis. In the case of Stencil4D, the domain is decomposed into 8 nodes along the x-axis, 8 along the y-axis, 4 along the z-axis, and 4 along the w-axis, forming a four-dimensional near-neighbor structure. For 3-to-1 tapered fat-tree with 1536 nodes, the Stencil3D configuration extends to 8 × 8 × 24, while Stencil4D uses 8 × 8 × 6 × 4, maintaining the same spatial layout logic.
 
-All of these applications are exhibit diverse communication behaviors ranging from synthetic
+All of these applications exhibit diverse communication behaviors ranging from synthetic
 near-neighbor patterns to production-level scientific codes
 and serve as appropriate test cases to assess how well SDN techniques
 manage different types of network traffic.

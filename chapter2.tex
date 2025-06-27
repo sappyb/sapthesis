@@ -1,4 +1,4 @@
-\chapter{Background and Related Works} In the domain of High-Performancell
+\chapter{Background and Related Works} In the domain of High-Performance
 Computing (HPC) and data center networks, the coordination of numerous hardware
 components is crucial for them to function as a unified system. This
 coordination happens through an interconnection network, which serves as the
@@ -65,7 +65,7 @@ $\mathrm{XGFT}(1;\,4;\,1)$, where every node has one link going up and the leaf 
 Third, create four copies of that one-level tree and join the leaf switches to two aggregate switches, giving
 $\mathrm{XGFT}(2;\,4,4;\,1,2)$, here 4 links go down from each aggregate switch to leaf switches, and two links go up from 
 each leaf switch to connect to the aggregate switches.  
-Last, connect three of these two-level trees to four core switches to form the three level fat-tree. Since each core switch has 3 downlink and each aggregate switch has 2 uplinks, the XGFT notation is $\mathrm{XGFT}(3;\,4,4,3;\,1,2,2)$. 
+Last, connect three of these two-level trees to four core switches to form the three level fat-tree. Since each core switch has 3 downlinks and each aggregate switch has 2 uplinks, the XGFT notation is $\mathrm{XGFT}(3;\,4,4,3;\,1,2,2)$. 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.8\columnwidth]{./figs/xgft.png}
@@ -147,7 +147,7 @@ These routing strategies play a vital role in ensuring efficient data transmissi
 
 \subsection{Routing in Fat-tree}
 Routing strategies within fat-tree networks can be categorized as either oblivious or adaptive to network communication traffic. In fat-tree networks, oblivious routing algorithms consistently select the same nearest common ancestor (NCA) for all communication between a given source-destination pair. These routing paths can be pre-computed and stored in forwarding tables or calculated dynamically based on simple formulas using source and destination labels. Two common static oblivious routing schemes in fat-tree networks are source-mod-k (S-mod-k) and destination-mod-k (D-mod-k). In S-mod-k at each upward hop, the switch selects port
-$(s \bmod k)$, where~$s$ is the numeric identifier of the source node and k is the number of uplinks from the current switch. Simillarly, in D-mod-k, the switch selects port
+$(s \bmod k)$, where~$s$ is the numeric identifier of the source node and k is the number of uplinks from the current switch. Similarly, in D-mod-k, the switch selects port
 $(d \bmod k)$, where~$d$ is the numeric identifier of the destination node~\cite{rodriguez2009oblivious, mahapatra2012limited}. In both these routing, after the packet reaches the NCA, it travels downward along the unique path to the destination node. Although, these routing algorithms are widely used in many HPC systems as the default static routing algorithm, they may exhibit poor performance for both average and worst-case permutation traffic patterns. 
 
 Adaptive routing dynamically select paths based on the current network state, such as link congestion or available bandwidth, to optimize performance in real-time. During the upward direction toward the nearest common ancestor (NCA) for both the source and destination routers, adaptive routing algorithms prioritize forwarding packets to the least congested port available~\cite{gomez2007deterministic}. This approach helps to alleviate congestion and optimize the utilization of network resources by steering traffic along paths with ample capacity. Once the packet reaches the NCA, which acts as the central router for the source-destination pair, it is then directed along a unique downward path toward the destination router. By dynamically adapting routing paths based on real-time network conditions, adaptive routing enhances the efficiency and performance of fat-tree networks. Routing decisions in fat-tree networks typically focus on determining the upward paths to carry traffic for each source-destination pair.
@@ -157,7 +157,7 @@ In a dragonfly topology, the source node belongs to the source group, and the de
 
 The minimal routing scheme (MIN) proposed by Kim \emph{et al.}~\cite{kim2008technology}
 always forwards a packet along the shortest path between a source router~$R_s$ and a destination
-router~$R_d$ in a dragonfly topology. If $R_s$ and $R_d$ lie in the same group or both of them are connected by a global link, thepath is a single hop, if one of the router is connected to the global link which goes to the other's group then it is a two-hop path, the packet never travels more than one global link. 
+router~$R_d$ in a dragonfly topology. If $R_s$ and $R_d$ lie in the same group or both of them are connected by a global link, the path is a single hop, if one of the router is connected to the global link which goes to the other's group then it is a two-hop path, the packet never travels more than one global link. 
 A minimal path comprises no more than three hops:
 
 \begin{enumerate}
@@ -173,7 +173,7 @@ destination group as such the global link between the two groups is shared by al
 to send its data, and it becomes a bottleneck.
 
 
-Valiant Load-Balanced Routing (VLB)~\cite{kim2008technology, kaplan2017unveiling}, sends each packet through a randomly chosen intermediate router in an intermidiate group before it reaches its destination. This detour spreads traffic evenly across the
+Valiant Load-Balanced Routing (VLB)~\cite{kim2008technology, kaplan2017unveiling}, sends each packet through a randomly chosen intermediate router in an intermediate group before it reaches its destination. This detour spreads traffic evenly across the
 fabric and removes congestion that can happen when many packets tries to use the same global link to reach their destination. A packet routed in VLB path can traverse up to two global links and no more than five hops:
 \begin{enumerate}
   \item a local hop inside the source group from the source router \(R_s\) to a
@@ -195,7 +195,7 @@ between a MIN path and a VLB path~\cite{kim2008technology}. It monitors the amou
 Two practical variants UGAL are:
 \emph{UGAL-G} which assumes perfect, system-wide knowledge of queue occupancies and is
 used mainly as an upper-bound benchmark.
-\emph{UGAL-L}, which relies only on local queue occupancy information at the the source
+\emph{UGAL-L}, which relies only on local queue occupancy information at the source
 router~\cite{kim2008technology}.  
 Let $q_m$ and $q_{nm}$ denote the output-queue occupancies of the first link on
 the minimal and non-minimal paths, and let $H_m$ and $H_{nm}$ be the respective
@@ -232,8 +232,8 @@ The following is a brief description of the applications I used in this work:
 \item \textbf{AMG}:  Parallel algebraic multigrid solver~\cite{amg}.
 \item \textbf{SW4lite}: Proxy application for SW4~\cite{sjogreen2018sw4}, a 3D seismic modeling code.
 \item \textbf{Lammps}: LAMMPS is an acronym for Large-scale Atomic/Molecular Massively Parallel Simulator, it solves equations of motion for a collection of interacting particles. It partitions the simulation domain into small sub-domains to solve a problem~\cite{thompson2022lammps}.
-\item \textbf{Nekbone}: Solves 3D Poisson problem in rectangular geometry. The key MPI operations are matrix-matrix multiplication, inner products, nearest neighbor communicaton, MPI\_Allreduce~\cite{gong2016nekbone}.
-\item \textbf{MILC}: Performs four dimensional SU(3) lattice gauge theory, mainly through near-neighbour communication and MPI\_Allreduce~\cite{gottlieb2001benchmarking}.
+\item \textbf{Nekbone}: Solves 3D Poisson problem in rectangular geometry. The key MPI operations are matrix-matrix multiplication, inner products, nearest neighbor communication, MPI\_Allreduce~\cite{gong2016nekbone}.
+\item \textbf{MILC}: Performs four dimensional SU(3) lattice gauge theory, mainly through near-neighbor communication and MPI\_Allreduce~\cite{gottlieb2001benchmarking}.
 \end{itemize}
 
 While evaluating these diverse HPC benchmarks, it is essential to understand the communication characteristics that fundamentally influence their performance and scalability. HPC applications typically exhibit two primary communication characteristics: regular (static) and irregular (dynamic and dynamically analyzable) communication patterns. Recognizing these patterns allows for more precise optimization of network resources, thereby enhancing overall efficiency and performance.
@@ -248,7 +248,7 @@ In HPC applications, communication is irregular when the data-transfer pattern c
 In dynamically analyzable communication, the source and destination nodes
 , as well as message sizes, can be determined at runtime but not 
 during compile time. For dynamic communication, these parameters cannot be determined 
-until after the communication has occured. Figure ~\ref{code.laghos} displays an MPI code segment of the primary solver function for Laghos. In Laghos, a new communicator is established each time the function is called, and communications are performed in that communicator as can be seen in Line 3 of the figure. The communication information for this application is unknown until the communication is performed and the communications are thus dynamic.
+until after the communication has occurred. Figure ~\ref{code.laghos} displays an MPI code segment of the primary solver function for Laghos. In Laghos, a new communicator is established each time the function is called, and communications are performed in that communicator as can be seen in Line 3 of the figure. The communication information for this application is unknown until the communication is performed and the communications are thus dynamic.
 
 \end{itemize}
 

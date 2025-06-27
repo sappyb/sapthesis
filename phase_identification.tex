@@ -6,14 +6,14 @@ allocated to communications in one phase can be reused for communications
 in another phase. Hence, identifying communication phases, which is unique
 in the HPC environment, allows the SDN to manage resources more effectively.
 
-\subsection{Phase identification with user hints}
+\subsection{Phase Identification With User Hints}
 
 Communication phases in an HPC application can be easily identified
 inside a program: there are often a section of code corresponding
 for the communications in the program. Figure~\ref{code.laghos.1}
 shows the code snippet for Laghos with communication phase marked. 
-Here, after initiating MPI Allreduce
-communications, the node performs MPI Barrier to make sure all ranks 
+Here, after initiating MPI\_Allreduce
+communications, the node performs MPI\_Barrier to make sure all ranks 
 have the data, before initiating the computation phase where
 it calculates the density.
 Now, the communication pattern may be different in the two
@@ -64,7 +64,7 @@ subseconds or even submilliseconds.
 %In this section I will talk about the phases of 
 %HPC application and how to detect them during application runtime.
 
-\subsection{Dynamic communication phase identification}
+\subsection{Dynamic Communication Phase Identification}
 
 \begin{comment}
  Flow information used to
@@ -109,7 +109,7 @@ Let Total\_data be all data sent by the application in the current interval\;
     \Else{
       Current phase is a computation phase\;
       \If {(The previous phase is a communication phase)} {
-        Release resouces allocated in previous phases
+        Release resources allocated in previous phases
         }
     }
 

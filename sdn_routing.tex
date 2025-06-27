@@ -24,7 +24,7 @@ achieve load balancing. In the following, I will first present my SDN-based
 routing for networks with single path routing and then discuss the
 scheme for networks with adaptive routing.
 
-\subsection{Single path routing}
+\subsection{Single Path Routing}
 
 For single-path routing, all packets of a flow
 follow the same path. For a traffic demand
@@ -191,7 +191,7 @@ matrix,\cite{Paull1962} and apply the coloured-matrix algorithm of
 Rodríguez \emph{et al.}\,\cite{Rodriguez2009}, thereby ensuring that each
 permutation is routed without link contention.
 
-\subsubsection{SDN-optimal for Tapered Fat-Trees}
+\subsubsection{SDN-optimal for Tapered Fat-trees}
 
 In a tapered fat-tree, bandwidth reduction occurs at higher layers,
 such as the aggregate to core level has less links than leaf to aggregate
@@ -210,7 +210,7 @@ available links at that layer. This ensures that within each
 sub-permutation, contention-free routing is still possible using
 the techniques previously employed.
 
-My goal is to make sure that I create sub-permuatations by
+My goal is to make sure that I create sub-permutations by
 selecting flows in such a way that the links in between each
 fat-tree layers have no contention and has the maximum utilization. 
 To construct these sub-permutations, the algorithm first selects

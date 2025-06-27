@@ -21,15 +21,15 @@ such flows based on user information.
 \begin{figure}[h]
 \centering
     \includegraphics[width=0.8\columnwidth]{figs/Fig3.png}
-\caption{High-level view of my flow classification schemes}
+\caption{High-level view of flow classification schemes}
   \label{fig:flow_schemes}
 \end{figure}
 
-\subsection{Flow identification without user input}
+\subsection{Flow Identification Without User Input}
 
 
 \vspace{0.08in}
-\noindent{\bf Threshold-based scheme}:
+\noindent{\bf Threshold-Based Scheme}:
 Existing flow classification methods including end host-based
 management~\cite{xu2015identifying},
 packet sampling~\cite{suh2014opensample}~\cite{afek2015sampling},
@@ -57,7 +57,7 @@ a machine learning based approach using deep neural network (DNN)
 for flow classification.
 
 \vspace{0.08in}
-\noindent{\bf Deep learning-based scheme}:
+\noindent{\bf Deep Learning-Based Scheme}:
 As mentioned earlier, communications in HPC applications exhibits phase
 behavior. If such behavior can be characterized and learned, I can classify
 the flows quicker (after a small number of phases).
@@ -72,7 +72,7 @@ sophisticated patterns such as the phased behavior.
 
 
 \vspace{0.08in}
-\noindent{\em Model architecture}:
+\noindent{\em Model Architecture}:
 My DNN model consists of an input layer of size 300 to accept the input data
 which consists of data sent across various intervals of time and a single dense layer with
 one output neuron, which uses the sigmoid activation function to classify the flows as elephants or mice.
@@ -86,7 +86,7 @@ cross-entropy loss, which is a standard loss function used for binary
 classification tasks.
 
 \vspace{0.08in}
-\noindent{\em Data collection and model training}:
+\noindent{\em Data Collection and Model Training}:
 I utilized the TraceR-CODES simulator to execute representative HPC 
 workloads, namely Random-Permutation, Shift-256, Stencil3d, Stencil4d, Milc, Nekbone, Subcom3d-a2a, Kripke ~\cite{kripke}, Laghos, 
 SW4lite ~\cite{sjogreen2018sw4}, and AMG ~\cite{amg}, 
@@ -160,7 +160,7 @@ SW4lite & 98.2\\ \bottomrule
 \end{table}
 
 
-\subsection{Flow identification with user input}
+\subsection{Flow Identification With User Input}
 
 For static communications in HPC applications like the ones in Stencil4d
 shown in Figure~\ref{code.stencil}, the HPC application developer (or
